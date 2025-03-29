@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@plugin "tailwindcss-animate";
+@plugin "tailwind-scrollbar";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-inter: "Inter", sans-serif;
+  --font-nunito: "Nunito", sans-serif;
+  --font-weight-bolder: 900;
+
+  /* Primary Colors */
+  --color-primary: #6941c6; /* Light mode primary (background, UI) */
+  --color-accent: #6941c6; /* Vibrant violet (buttons, interactive elements) */
+
+  /* Backgrounds */
+  --color-bg-light: #f7f7f9; /* Soft off-white (main UI background) */
+  --color-bg-dark: #1b1b1b; /* Dark mode background */
+  --color-bg-card: #ffffff; /* White (cards, containers) */
+
+  /* Text Colors */
+  --color-text-primary: #212121; /* Dark gray (default text) */
+  --color-text-secondary: #667085; /* Muted gray (subtext, descriptions) */
+  --color-text-accent: #6941c6; /* Vibrant violet (for emphasis) */
+  --color-text-muted: #797979; /* Light gray (inactive states) */
+
+  /* Button Colors */
+  --color-btn-primary: #6941c6;
+  --color-btn-primary-hover: #7f56d9;
+  --color-btn-primary-disabled: #e9d7fe;
+
+  /* Borders */
+  --color-border-light: #e2e2e2;
+  --color-border-dark: #474747;
+  --color-border-accent: #6941c6;
+
+  /* Scrollbar */
+  --color-scrollbar-thumb: #c0c3c9;
+  --color-scrollbar-track: #eaecf0;
+}
+
+/* Autofill input fields */
+input:-webkit-autofill {
+  background-color: transparent !important;
+  -webkit-box-shadow: 0 0 0px 1000px var(--background) inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Utility Classes */
+.container {
+  @apply mx-auto;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
