@@ -11,33 +11,33 @@
   --font-weight-bolder: 900;
 
   /* Primary Colors */
-  --color-primary: #6941c6; /* Light mode primary (background, UI) */
-  --color-accent: #6941c6; /* Vibrant violet (buttons, interactive elements) */
+  --color-primary: #4a1f8c; /* Even darker violet for maximum visibility */
+  --color-accent: #4a1f8c;
 
   /* Backgrounds */
-  --color-bg-light: #f7f7f9; /* Soft off-white (main UI background) */
-  --color-bg-dark: #1b1b1b; /* Dark mode background */
-  --color-bg-card: #ffffff; /* White (cards, containers) */
+  --color-bg-light: #eaeaea; /* Lighter gray for more contrast */
+  --color-bg-dark: #0e0e0e; /* Near black for strong dark mode contrast */
+  --color-bg-card: #ffffff;
 
   /* Text Colors */
-  --color-text-primary: #212121; /* Dark gray (default text) */
-  --color-text-secondary: #667085; /* Muted gray (subtext, descriptions) */
-  --color-text-accent: #6941c6; /* Vibrant violet (for emphasis) */
-  --color-text-muted: #797979; /* Light gray (inactive states) */
+  --color-text-primary: #000000; /* Pure black for maximum readability */
+  --color-text-secondary: #1a1a1a; /* Darker gray */
+  --color-text-accent: #4a1f8c; /* Adjusted to match stronger primary color */
+  --color-text-muted: #4a4a4a; /* Darker muted gray */
 
   /* Button Colors */
-  --color-btn-primary: #6941c6;
-  --color-btn-primary-hover: #7f56d9;
-  --color-btn-primary-disabled: #e9d7fe;
+  --color-btn-primary: #4a1f8c;
+  --color-btn-primary-hover: #6931b3; /* More distinct hover contrast */
+  --color-btn-primary-disabled: #b399e6; /* Stronger disabled contrast */
 
   /* Borders */
-  --color-border-light: #e2e2e2;
-  --color-border-dark: #474747;
-  --color-border-accent: #6941c6;
+  --color-border-light: #8a8a8a; /* Darker for better visibility */
+  --color-border-dark: #3a3a3a;
+  --color-border-accent: #4a1f8c;
 
   /* Scrollbar */
-  --color-scrollbar-thumb: #c0c3c9;
-  --color-scrollbar-track: #eaecf0;
+  --color-scrollbar-thumb: #6c6f77; /* More contrast */
+  --color-scrollbar-track: #c4c6cc;
 }
 
 /* Autofill input fields */
