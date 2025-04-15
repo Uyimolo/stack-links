@@ -89,7 +89,7 @@ const LoginForm = () => {
       </Button>
       <div className="flex flex-wrap justify-between gap-x-6 gap-y-2">
         <p className="text-sm">
-          {`an account Don't have?`}
+          {`Don't have an account?`}
           <Link href="/signup" className="text-primary">
             Sign up
           </Link>

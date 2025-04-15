@@ -3,30 +3,24 @@ import { useAuthStore } from "@/store/useAuthStore"
 import React from "react"
 import Header from "./Header"
 import Sidebar from "./Sidebar"
+import Loading from "../global/Loading"
 
 const DashboardLayoutComp = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuthStore()
   // Show loading state
   if (loading) {
-    return (
-      <div className="flex h-screen w-full items-center justify-center">
-        <div className="text-center">
-          <div className="border-primary mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-t-transparent"></div>
-          <p className="text-lg text-gray-600">Loading your dashboard...</p>
-        </div>
-      </div>
-    )
+    return <Loading />
   }
 
-  // Just in case auth hasn't caught up yet
   if (!user) return null
 
   return (
-    <div>
+    <div className="relative md:bg-white mx-auto h-full min-h-screen w-full max-w-[1700px]">
       <Sidebar />
-      <div className="">
+      <div className="w-full pb-20 md:ml-[250px] md:w-[calc(100%-250px)]">
         <Header />
         {children}
+        {/* <Loading /> */}
       </div>
     </div>
   )

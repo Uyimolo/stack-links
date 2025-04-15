@@ -1,13 +1,19 @@
+import { SquareStackIcon } from "lucide-react"
 import React from "react"
 
 export const Logo = () => {
-  return <p className="text-primary font-inter">Stacklinks</p>
+  return (
+    <div className="flex gap-1">
+      <SquareStackIcon className="text-primary" />
+      <p className="text-secondary font-inter text-2xl font-bold">Stacklinks</p>
+    </div>
+  )
 }
 
 export const LogoSmall = () => {
   return (
-    <div className="bg-primary font-inter font-semibold aspect-square w-fit gap-1 rounded-lg p-3">
-      <p className="text-2xl text-white">SL</p>
+    <div className="bg-primary aspect-square w-fit gap-1 rounded-lg p-2 font-semibold">
+      <SquareStackIcon className="text-primary" />
     </div>
   )
 }
