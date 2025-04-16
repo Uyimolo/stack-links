@@ -13,7 +13,7 @@ const VisibilityToggle = ({ link }: { link: LinkType }) => {
       onClick={toggleVisibility}
       className={cn(
         "group flex h-5 w-9 cursor-pointer items-center rounded-full px-1 transition duration-300 ease-linear",
-        visibility === "public" ? "bg-text-success" : "bg-black/20"
+        visibility === "public" ? "bg-green" : "bg-grey-3"
       )}
     >
       <div

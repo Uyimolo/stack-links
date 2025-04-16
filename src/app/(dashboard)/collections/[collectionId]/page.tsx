@@ -1,6 +1,10 @@
 import Collection from "@/components/collections/Collection"
 
-const LinksPage = async ({ params }: { params: { collectionId: string } }) => {
+interface LinksPageProps {
+  params: { collectionId: string }
+}
+
+const LinksPage = async ({ params }: LinksPageProps) => {
   const { collectionId } = await params
   return <Collection collectionId={collectionId} />
 }

@@ -15,7 +15,7 @@ const DashboardLayoutComp = ({ children }: { children: React.ReactNode }) => {
   if (!user) return null
 
   return (
-    <div className="relative md:bg-white mx-auto h-full min-h-screen w-full max-w-[1700px]">
+    <div className="relative mx-auto h-full min-h-screen w-full max-w-[1700px]">
       <Sidebar />
       <div className="w-full pb-20 md:ml-[250px] md:w-[calc(100%-250px)]">
         <Header />

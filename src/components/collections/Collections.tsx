@@ -6,36 +6,21 @@ import CollectionCard from "./CollectionCard"
 import Empty from "../global/Empty"
 import { useAppState } from "@/store/useAppStateStore"
 import Loading from "../global/Loading"
+import { H1 } from "../global/Text"
 
 const Collections = () => {
   const { collections } = useCollections(auth.currentUser?.uid || "")
   const { updateModal } = useAppState()
   return (
-    <div className="mx-4 min-h-[83vh] rounded-xl bg-white">
+    <div className="min-h-[83vh] bg-white p-4">
       {/* collections header */}
       <CollectionsHeader />
 
-      <div className="">
-        {/* {collections && !collections.length && (
-          <div className="w-full">
-            <Empty
-              text={`You don't have any collections yet.`}
-              buttonOnClick={() =>
-                updateModal({ status: "open", modalType: "add collection" })
-              }
-              buttonText="Create your first collection"
-            />
-          </div>
-        )}
-
-        {collections?.map((collection) => (
-          <CollectionCard key={collection.id} collection={collection} />
-        ))} */}
-
+      <div className="pt-6">
         {collections === undefined ? (
           <Loading className="h-[50vh]" loadingText="Getting your links" />
         ) : collections.length ? (
-          <div className="flex flex-wrap gap-3 pt-16">
+          <div className="flex flex-wrap gap-3">
             {collections?.map((collection) => (
               <CollectionCard key={collection.id} collection={collection} />
             ))}

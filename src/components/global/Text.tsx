@@ -93,8 +93,8 @@ export const Paragraph = ({
 }: ParagraphProps) => {
   return (
     <p
-      className={cn("font-[var(--font-montserrat)] text-sm leading-5", className)}
-      style={{ color: variantMap[variant] }}
+      className={cn("font-montserrat text-sm leading-5", className)}
+      // style={{ color: variantMap[variant] }}
       {...props}
     >
       {children}

@@ -1,18 +1,23 @@
-'use client'
-import { useAppState } from '@/store/useAppStateStore'
-import { MenuIcon, X } from 'lucide-react'
-import React from 'react'
+"use client"
+import { cn } from "@/lib/cn"
+import { useAppState } from "@/store/useAppStateStore"
+import { MenuIcon, X } from "lucide-react"
+import React from "react"
 
-const SidebarMenuBtn = () => {
-
-      const { toggleSidebar, showSidebar } = useAppState()
+const SidebarMenuBtn = ({ mode = "closed" }: { mode?: "open" | "closed" }) => {
+  const { toggleSidebar, showSidebar } = useAppState()
 
   return (
-    <button className="lg:hidden" onClick={toggleSidebar}>
+    <button
+      className={cn("lg:hidden", mode === "open" ? "" : "")}
+      onClick={toggleSidebar}
+    >
       {showSidebar ? (
-        <X className="text-text-secondary" />
+        <X className={cn("text-text-secondary", mode === "closed" && "hidden")} />
       ) : (
-        <MenuIcon className="text-text-secondary" />
+        <MenuIcon
+          className={cn("text-text-secondary", mode === "open" && "hidden")}
+        />
       )}
     </button>
   )

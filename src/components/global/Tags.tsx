@@ -13,7 +13,7 @@ const Tags = ({ tags }: { tags: string[] }) => {
           {visibleTags?.map((tag, index) => (
             <span
               key={index}
-              className="bg-white border text-text-secondary rounded-full px-2.5 py-0.5 text-xs font-medium text-nowrap transition-colors hover:bg-gray-200"
+              className="bg-blue-1/50 borde text-text-secondary rounded-full px-2.5 py-0.5 text-xs text-nowrap transition-colors hover:bg-gray-200"
             >
               {tag.trim()}
             </span>

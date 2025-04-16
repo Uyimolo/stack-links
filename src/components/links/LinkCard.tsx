@@ -9,6 +9,8 @@ import EditableField from "./EditableField"
 import LinkActions from "./LinkActions"
 import Tags from "../global/Tags"
 import { toast } from "sonner"
+import Image from "next/image"
+import placeholder from "@/assets/svgs/My-password-pana.svg"
 
 const schema = z.object({
   url: z.string().url("Please enter a valid URL"),
@@ -66,10 +68,10 @@ const LinkCard = ({ link }: { link: LinkType }) => {
   const values = watch()
 
   return (
-    <div className="hover:border-primary group w-full space-y-3 rounded-xl border border-transparent bg-bg-very-light-grey px-3 py-3 transition duration-300 group-hover:text-white">
+    <div className="hover:border-primary group border-grey-3 w-full space-y-3 overflow-hidden rounded-xl border bg-white transition duration-300 group-hover:text-white">
       {/* header */}
 
-      <div className="flex justify-between overflow-auto">
+      <div className="flex justify-between overflow-auto px-4 pt-4">
         <GripVertical className="text-muted-foreground w-4 cursor-grab p-0" />
         <div className="w-fit max-w-4/5">
           <Tags tags={tags} />
@@ -77,75 +79,53 @@ const LinkCard = ({ link }: { link: LinkType }) => {
       </div>
 
       {/* editable fields */}
-      <div className="space-y-1 rounded-xl bg-white p-3">
-        <EditableField
-          field="title"
-          value={values.title}
-          isEditing={editField === "title"}
-          error={errors.title?.message}
-          onEdit={() => setEditField("title")}
-          onBlur={() => handleSave("title")}
-          register={register}
-          placeholder="link title"
-        />
 
-        {/* <Input
-              // label="Title"
-              name="title"
-              placeholder="Link title"
-              error={errors.title?.message}
-              register={register}
-              className="bg-white"
-              onBlur={() => handleSave("title")}
-            />
-
-            <Input
-              // label="Url"
-              name="url"
-              placeholder="Link Address"
-              error={errors.title?.message}
-              register={register}
-              className="bg-white"
-              onBlur={() => handleSave("url")}
-            /> */}
-        <EditableField
-          field="url"
-          value={values.url}
-          isEditing={editField === "url"}
-          error={errors.url?.message}
-          onEdit={() => setEditField("url")}
-          onBlur={() => handleSave("url")}
-          register={register}
-          placeholder="link URL"
-        />
-
-        <EditableField
-          field="description"
-          value={values.description}
-          isEditing={editField === "description"}
-          error={errors.description?.message}
-          onEdit={() => setEditField("description")}
-          onBlur={() => handleSave("description")}
-          register={register}
-          placeholder="link description"
-          type="textarea"
-        />
-
-        {/* <Input
-            // label="Url"
-            name="description"
-            placeholder="Link Description"
-            error={errors.description?.message}
+      <div className="flex items-start gap-4 px-4">
+        {/* link image */}
+        <div className="bg-grey-3 aspect-square w-[20%] rounded-xl">
+          <Image src={placeholder} alt="link image" />
+        </div>
+        <div className="border-grey borde bg-whit h-fit w-[80%] space-y-1 rounded-xl">
+          <EditableField
+            field="title"
+            value={values.title}
+            isEditing={editField === "title"}
+            error={errors.title?.message}
+            onEdit={() => setEditField("title")}
+            onBlur={() => handleSave("title")}
             register={register}
-            className="bg-white overflow-hidden"
-            rows={1}
-            type="textarea"
+            placeholder="link title"
+          />
+
+          <EditableField
+            field="url"
+            value={values.url}
+            isEditing={editField === "url"}
+            error={errors.url?.message}
+            onEdit={() => setEditField("url")}
+            onBlur={() => handleSave("url")}
+            register={register}
+            placeholder="link URL"
+          />
+
+          <EditableField
+            field="description"
+            value={values.description}
+            isEditing={editField === "description"}
+            error={errors.description?.message}
+            onEdit={() => setEditField("description")}
             onBlur={() => handleSave("description")}
-          /> */}
+            register={register}
+            placeholder="link description"
+            type="textarea"
+          />
+        </div>
       </div>
 
       {/* footer */}
-      <LinkActions link={link} />
+      <div className="px-4 bg-grey-4 pt-2 pb-3">
+        <LinkActions link={link} />
+      </div>
     </div>
   )
 }

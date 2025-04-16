@@ -74,43 +74,55 @@ const Sidebar = () => {
   const isActive = (path: string): boolean => pathname.includes(path)
 
   return (
-    <div
-      className={cn(
-        "border-border-light fixed top-0 left-0 z-10 min-h-screen w-[300px] -translate-x-[100%] space-y-4 border-r bg-white shadow-lg transition-all duration-300 ease-in-out md:top-0 md:w-[250px] md:translate-x-0 md:shadow-none",
-        showSidebar ? "translate-x-0" : "-translate-x-[100%] md:translate-x-0"
-      )}
-    >
-      <div className="flex items-center justify-between px-6 py-6">
-        <Link href="/dashboard">
-          <Logo />
-        </Link>
-        <SidebarMenuBtn />
+    <>
+      {/* overlay */}
+
+      <div
+        onClick={toggleSidebar}
+        className={cn(
+          "bg-grey/50 fixed top-0 z-10 h-screen w-screen transition duration-500 md:hidden",
+          showSidebar ? "" : "-translate-x-full"
+        )}
+      ></div>
+
+      <div
+        className={cn(
+          "border-grey-5 fixed top-0 left-0 z-10 min-h-screen w-[300px] -translate-x-[100%] md:absolute space-y-4 md:border-r bg-white transition-all duration-300 ease-in-out md:top-0 md:w-[250px] md:translate-x-0",
+          showSidebar ? "translate-x-0" : "-translate-x-[100%] md:translate-x-0"
+        )}
+      >
+        <div className="flex items-center justify-between px-6 py-6">
+          <Link href="/dashboard">
+            <Logo />
+          </Link>
+          <SidebarMenuBtn mode="open" />
+        </div>
+
+        <UserCard />
+
+        <nav>
+          <ul className="flex flex-col">
+            {dashboardLinks.map((link) => (
+              <li key={link.label} onClick={toggleSidebar}>
+                <Link
+                  href={link.path}
+                  className={cn(
+                    "group flex h-12 items-center gap-2 border-r-4 border-transparent px-6 text-sm transition duration-300 ease-in-out",
+                    isActive(link.path)
+                      ? "bg-blue-2 border-primary"
+                      : "hover:bg-grey-6 hover:border-primary/50"
+                  )}
+                >
+                  <link.icon className="text-text-secondary h-5 w-5" />
+
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
       </div>
-
-      <UserCard />
-
-      <nav>
-        <ul className="flex flex-col">
-          {dashboardLinks.map((link) => (
-            <li key={link.label} onClick={toggleSidebar}>
-              <Link
-                href={link.path}
-                className={cn(
-                  "group flex h-12 items-center gap-2 border-r-4 border-transparent px-6 transition duration-300 text-sm ease-in-out",
-                  isActive(link.path)
-                    ? "bg-bg-very-light-blue border-primary"
-                    : "hover:bg-bg-very-light-grey hover:border-primary/50"
-                )}
-              >
-                <link.icon className="text-text-secondary h-5 w-5" />
-
-                {link.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
-    </div>
+    </>
   )
 }
 

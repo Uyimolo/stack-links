@@ -4,6 +4,21 @@ import { useSearch } from "@/hooks/useSearch"
 import { auth } from "@/config/firebase"
 import { cn } from "@/lib/cn"
 
+const highlightMatch = (text: string, query: string) => {
+  if (!query) return text
+
+  const regex = new RegExp(`(${query})`, "gi")
+  return text.split(regex).map((part, index) =>
+    part.toLowerCase() === query.toLowerCase() ? (
+      <span key={index} className="bg-blue-1">
+        {part}
+      </span>
+    ) : (
+      part
+    )
+  )
+}
+
 export default function DropdownSearch() {
   const userId = auth.currentUser?.uid || ""
   const [query, setQuery] = useState("")
@@ -20,10 +35,7 @@ export default function DropdownSearch() {
   >
 
   // Use the search hook to get links and collections
-  const { links, collections, searching } = useSearch(
-    userId,
-    query
-  )
+  const { links, collections, searching } = useSearch(userId, query)
 
   useEffect(() => {
     if (isOpen) {
@@ -151,7 +163,6 @@ export default function DropdownSearch() {
     })),
   ]
 
-
   return (
     <div className="relative w-full">
       <div className="relative">
@@ -163,7 +174,7 @@ export default function DropdownSearch() {
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
           onFocus={() => query.trim() && setIsOpen(true)}
-          className="border-border-medium h-12 w-full rounded-lg border px-4 text-sm focus:ring-0 focus:ring-transparent"
+          className="border-grey-3 h-12 w-full rounded-lg border px-4 text-sm focus:ring-0 focus:ring-transparent"
           aria-haspopup="listbox"
         />
         <div className="absolute top-1/2 right-4 -translate-y-1/2">
@@ -183,30 +194,32 @@ export default function DropdownSearch() {
           id="dropdown-list"
           role="listbox"
           className={cn(
-            "absolute z-10 mt-2 flex max-h-[260px] w-full flex-col overflow-auto rounded-md bg-white lg:overflow-hidden",
-            allItems.length ? "border-border-medium border" : ""
+            "shadow-grey absolute z-10 mt-2 flex max-h-[260px] w-fit flex-col overflow-auto rounded-md bg-white shadow-lg lg:overflow-hidden",
+            allItems.length ? "border-grey-3 border" : ""
           )}
         >
           {query !== "" &&
             allItems.map((item, index) => (
               <li
                 key={item.id}
-                className={`hover:bg-bg-light-grey border-b-border-light flex cursor-pointer items-stretch gap-2 border-b p-2 ${
+                className={`hover:bg-bg-light-grey border-b-border-light flex w-full cursor-pointer items-stretch gap-2 border-b p-2 ${
                   selectedIndex === index
-                    ? "lg:bg-bg-light-grey"
-                    : "bg-transparent"
+                    ? "lg:bg-grey-5"
+                    : "hover:bg-grey-6 bg-transparent"
                 }`}
                 ref={(el) => {
                   listItemRefs.current[index] = el
                 }}
               >
                 <div className="flex flex-col space-y-1 p-2">
-                  <span className="text-sm font-semibold">{item.name}</span>
+                  <span className="line-clamp-1 text-sm font-semibold">
+                    {highlightMatch(item.name, query)}
+                  </span>
                   <span className="line-clamp-1 text-xs text-gray-500">
-                    {item.url || ""}
+                    {highlightMatch(item.url || "", query)}
                   </span>
                   <span className="line-clamp-2 text-xs text-gray-500">
-                    {item.description || ""}
+                    {highlightMatch(item.description || "", query)}
                   </span>
                 </div>
               </li>
