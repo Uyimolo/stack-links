@@ -1,11 +1,14 @@
 import Collection from "@/components/collections/Collection"
 
-interface LinksPageProps {
-  params: { collectionId: string }
+interface PageProps {
+  params: {
+    collectionId: string
+  }
+  searchParams: { [key: string]: string | string[] | undefined }
 }
 
-const LinksPage = async ({ params }: LinksPageProps) => {
-  const { collectionId } = await params
+const LinksPage = ({ params }: PageProps) => {
+  const { collectionId } = params
   return <Collection collectionId={collectionId} />
 }
 
