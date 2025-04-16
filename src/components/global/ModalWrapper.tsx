@@ -6,27 +6,8 @@ import AddCollectionModal from "../collections/AddCollectionModal"
 import UpdateCollectionModal from "../collections/UpdateCollectionModal"
 import DeleteCollectionModal from "../collections/DeleteCollectionModal"
 import AddLinkModal from "../links/AddLinkModal"
-import { ScrollArea } from "../ui/scroll-area"
 import DeleteLinkModal from "../links/DeleteLinkModal"
-
-type ModalPropsMap = {
-  "add collection": React.ComponentProps<typeof AddCollectionModal>
-  "update collection": React.ComponentProps<typeof UpdateCollectionModal>
-  "delete collection": React.ComponentProps<typeof DeleteCollectionModal>
-  "add link": React.ComponentProps<typeof AddLinkModal>
-  "delete link": React.ComponentProps<typeof DeleteLinkModal>
-
-}
-
-const MODAL_COMPONENTS: {
-  [K in keyof ModalPropsMap]: React.FC<ModalPropsMap[K]>
-} = {
-  "add collection": AddCollectionModal,
-  "update collection": UpdateCollectionModal,
-  "delete collection": DeleteCollectionModal,
-  "add link": AddLinkModal,
-  "delete link": DeleteLinkModal,
-}
+import { ScrollArea } from "../ui/scroll-area"
 
 function ModalWrapper() {
   const { modalState, closeModal } = useAppState()
@@ -41,8 +22,26 @@ function ModalWrapper() {
 
   if (status === "close" || !modalType) return null
 
-  const ModalComponent = MODAL_COMPONENTS[modalType as keyof typeof MODAL_COMPONENTS]
-  if (!ModalComponent) return null
+  const renderModal = () => {
+    switch (modalType) {
+      case "add collection":
+        return <AddCollectionModal />
+      case "update collection":
+        if (!modalProps?.collection) return null
+        return <UpdateCollectionModal collection={modalProps.collection} />
+      case "delete collection":
+        if (!modalProps?.collectionId) return null
+        return <DeleteCollectionModal collection={modalProps.collection} />
+      case "add link":
+        if (!modalProps?.collectionId) return null
+        return <AddLinkModal collectionId={modalProps.collectionId} />
+      case "delete link":
+        if (!modalProps?.link) return null
+        return <DeleteLinkModal link={modalProps.link} />
+      default:
+        return null
+    }
+  }
 
   return (
     <div
@@ -53,14 +52,7 @@ function ModalWrapper() {
         className="max-h-[90vh] rounded-lg shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
-        <ModalComponent
-          {...{
-            ...(modalProps ?? {}),
-            collection: modalProps?.collection || {},
-            collectionId: modalProps?.collectionId,
-            link: modalProps?.link,
-          }}
-        />
+        {renderModal()}
       </ScrollArea>
     </div>
   )

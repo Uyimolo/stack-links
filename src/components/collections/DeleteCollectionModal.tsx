@@ -12,7 +12,7 @@ import { CollectionType } from "@/types/types"
 const DeleteCollectionModal = ({
   collection,
 }: {
-  collection: CollectionType
+  collection?: CollectionType
 }) => {
   const userId = auth.currentUser?.uid || ""
   const { loading } = useCollections(userId)
@@ -21,7 +21,7 @@ const DeleteCollectionModal = ({
 
   const handleDelete = async () => {
     try {
-      await removeCollection(collection.id)
+      await removeCollection(collection?.id ||'')
       closeModal()
     } catch (error) {
       console.error(error)
@@ -49,7 +49,7 @@ const DeleteCollectionModal = ({
       <div className="mt-4 flex flex-col gap-6">
         <p className="text-text-secondary text-sm">
           Are you sure you want to delete collection &quot;
-          <span className="font-bold">{collection.name}</span>&quot;? This
+          <span className="font-bold">{collection?.name}</span>&quot;? This
           action cannot be undone.
         </p>
         <div className="flex justify-end gap-3">

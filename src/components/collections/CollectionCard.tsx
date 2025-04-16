@@ -21,10 +21,7 @@ const CollectionCard = ({ collection }: { collection: CollectionType }) => {
       </div>
 
       {description && (
-        <Paragraph
-          className="text-text-secondary line-clamp-3 h-16 font-light"
-          size="sm"
-        >
+        <Paragraph className="text-text-secondary line-clamp-3 h-16 font-light">
           {description}
         </Paragraph>
       )}

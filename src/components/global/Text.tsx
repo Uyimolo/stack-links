@@ -46,7 +46,7 @@ export const H3 = ({ children, className, ...props }: TextProps) => (
 export const H4 = ({ children, className, ...props }: TextProps) => (
   <h4
     className={cn(
-      "font-montserrat text-sm font-medium text-[var(--color-text-primary)] md:text-bas",
+      "font-montserrat md:text-bas text-sm font-medium text-[var(--color-text-primary)]",
       className
     )}
     {...props}
@@ -57,44 +57,16 @@ export const H4 = ({ children, className, ...props }: TextProps) => (
 
 type ParagraphProps = React.HTMLAttributes<HTMLParagraphElement> & {
   children: React.ReactNode
-  // variant?:
-  //   | "primary"
-  //   | "secondary"
-  //   | "muted"
-  //   | "accent"
-  //   | "success"
-  //   | "error"
-  //   | "warning"
-  // size?: "xs" | "sm" | "base"
 }
-
-// const variantMap: Record<NonNullable<ParagraphProps["variant"]>, string> = {
-//   primary: "var(--color-text-primary)",
-//   secondary: "var(--color-text-secondary)",
-//   muted: "var(--color-text-muted)",
-//   accent: "var(--color-text-accent)",
-//   success: "var(--color-text-success)",
-//   error: "var(--color-text-error)",
-//   warning: "var(--color-text-warning)",
-// }
-
-// const sizeMap: Record<NonNullable<ParagraphProps["size"]>, string> = {
-//   xs: "text-[12px]",
-//   sm: "text-[14px]",
-//   base: "text-[16px]",
-// }
 
 export const Paragraph = ({
   children,
   className,
-  // variant = "secondary",
-  // size = "sm",
   ...props
 }: ParagraphProps) => {
   return (
     <p
       className={cn("font-montserrat text-sm leading-5", className)}
-      // style={{ color: variantMap[variant] }}
       {...props}
     >
       {children}

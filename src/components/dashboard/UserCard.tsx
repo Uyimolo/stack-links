@@ -9,8 +9,8 @@ const UserCard = () => {
 
       {/* user details */}
       <div className="w-[70%]">
-        <Paragraph className="truncate" size="sm">John Doe</Paragraph>
-        <Paragraph className="truncate" size="xs">
+        <Paragraph className="truncate">John Doe</Paragraph>
+        <Paragraph className="truncate">
           Software Engineer
         </Paragraph>
       </div>

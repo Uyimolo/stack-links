@@ -1,9 +1,12 @@
 "use client"
-import { CollectionType } from "@/types/types"
-import { zodResolver } from "@hookform/resolvers/zod"
-import React, { useState } from "react"
+
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import React, { useState } from "react"
+import { useAppState } from "@/store/useAppStateStore"
+import { useCollectionActions } from "@/hooks/useCollectionHooks"
+import { CollectionType } from "@/types/types"
 import {
   Select,
   SelectContent,
@@ -13,9 +16,7 @@ import {
 } from "@/components/ui/select"
 import Input from "../global/Input"
 import { Button } from "../global/Button"
-import { useAppState } from "@/store/useAppStateStore"
 import { X } from "lucide-react"
-import { useCollectionActions } from "@/hooks/useCollectionHooks"
 
 const schema = z.object({
   name: z
@@ -35,8 +36,8 @@ const UpdateCollectionModal = ({
   collection: CollectionType
 }) => {
   const { updateModal } = useAppState()
-  const [error, setError] = useState<string | null>(null)
   const { editCollection } = useCollectionActions()
+  const [error, setError] = useState<string | null>(null)
 
   const {
     register,
@@ -45,34 +46,35 @@ const UpdateCollectionModal = ({
     setValue,
     watch,
   } = useForm<FormData>({
+    resolver: zodResolver(schema),
     defaultValues: {
       name: collection.name,
       description: collection.description,
       visibility: collection.visibility,
-      tags: collection.tags?.join(","),
+      tags: collection.tags?.join(",") || "",
     },
-    resolver: zodResolver(schema),
     mode: "onChange",
   })
 
   const onSubmit = async (data: FormData) => {
     setError(null)
-
     try {
-      const formattedTags = data.tags
-        ? data.tags.split(",").map((tag) => tag.trim())
-        : []
+      const tagsArray =
+        data.tags
+          ?.split(",")
+          .map((tag) => tag.trim())
+          .filter(Boolean) || []
       await editCollection({
         collectionId: collection.id,
         name: data.name ?? "",
         description: data.description ?? "",
         visibility: data.visibility ?? "public",
-        tags: formattedTags,
+        tags: tagsArray,
       })
-      updateModal({ status: "close", modalType: null }) // Close modal on success
+      updateModal({ status: "close", modalType: null })
     } catch (err) {
+      console.error(err)
       setError("Failed to update collection. Please try again.")
-      console.error("Error updating collection:", err)
     }
   }
 
@@ -83,10 +85,9 @@ const UpdateCollectionModal = ({
           Update Collection
         </h2>
         <button
-          className="text-gray-500 hover:text-gray-700"
           onClick={() => updateModal({ status: "close", modalType: null })}
         >
-          <X className="h-5 w-5" />
+          <X className="h-5 w-5 text-gray-500 hover:text-gray-700" />
         </button>
       </div>
 
@@ -100,7 +101,6 @@ const UpdateCollectionModal = ({
           placeholder="Enter collection name"
           error={errors.name?.message}
         />
-
         <Input
           type="textarea"
           register={register}
@@ -108,18 +108,17 @@ const UpdateCollectionModal = ({
           placeholder="Enter collection description"
           error={errors.description?.message}
         />
-
         <div>
           <label className="text-sm font-medium text-gray-700">
             Visibility
           </label>
           <Select
             value={watch("visibility")}
-            onValueChange={(value) =>
-              setValue("visibility", value as "public" | "private" | "unlisted")
+            onValueChange={(val) =>
+              setValue("visibility", val as "public" | "private" | "unlisted")
             }
           >
-            <SelectTrigger className="w-full rounded-lg border p-3 py-5 text-sm">
+            <SelectTrigger className="w-full border p-3 text-sm">
               <SelectValue placeholder="Select visibility" />
             </SelectTrigger>
             <SelectContent>
@@ -132,7 +131,6 @@ const UpdateCollectionModal = ({
             <p className="text-sm text-red-500">{errors.visibility.message}</p>
           )}
         </div>
-
         <Input
           type="text"
           register={register}
@@ -140,7 +138,6 @@ const UpdateCollectionModal = ({
           placeholder="Enter tags (comma separated)"
           error={errors.tags?.message}
         />
-
         <Button type="submit" className="bg-primary w-full text-white">
           Update Collection
         </Button>
