@@ -1,15 +1,11 @@
 import Collection from "@/components/collections/Collection"
 
-interface PageProps {
-  params: {
-    collectionId: string
-  }
-  searchParams: { [key: string]: string | string[] | undefined }
-}
+export default async function CollectionPage({
+  params,
+}: {
+  params: Promise<{ collectionId: string }>
+}) {
+  const { collectionId } = await params
 
-const LinksPage = ({ params }: PageProps) => {
-  const { collectionId } = params
   return <Collection collectionId={collectionId} />
 }
-
-export default LinksPage
