@@ -57,26 +57,26 @@ export const H4 = ({ children, className, ...props }: TextProps) => (
 
 type ParagraphProps = React.HTMLAttributes<HTMLParagraphElement> & {
   children: React.ReactNode
-  variant?:
-    | "primary"
-    | "secondary"
-    | "muted"
-    | "accent"
-    | "success"
-    | "error"
-    | "warning"
-  size?: "xs" | "sm" | "base"
+  // variant?:
+  //   | "primary"
+  //   | "secondary"
+  //   | "muted"
+  //   | "accent"
+  //   | "success"
+  //   | "error"
+  //   | "warning"
+  // size?: "xs" | "sm" | "base"
 }
 
-const variantMap: Record<NonNullable<ParagraphProps["variant"]>, string> = {
-  primary: "var(--color-text-primary)",
-  secondary: "var(--color-text-secondary)",
-  muted: "var(--color-text-muted)",
-  accent: "var(--color-text-accent)",
-  success: "var(--color-text-success)",
-  error: "var(--color-text-error)",
-  warning: "var(--color-text-warning)",
-}
+// const variantMap: Record<NonNullable<ParagraphProps["variant"]>, string> = {
+//   primary: "var(--color-text-primary)",
+//   secondary: "var(--color-text-secondary)",
+//   muted: "var(--color-text-muted)",
+//   accent: "var(--color-text-accent)",
+//   success: "var(--color-text-success)",
+//   error: "var(--color-text-error)",
+//   warning: "var(--color-text-warning)",
+// }
 
 // const sizeMap: Record<NonNullable<ParagraphProps["size"]>, string> = {
 //   xs: "text-[12px]",
@@ -87,7 +87,7 @@ const variantMap: Record<NonNullable<ParagraphProps["variant"]>, string> = {
 export const Paragraph = ({
   children,
   className,
-  variant = "secondary",
+  // variant = "secondary",
   // size = "sm",
   ...props
 }: ParagraphProps) => {

@@ -2,13 +2,9 @@
 
 import { auth } from "@/config/firebase"
 import { useLinks } from "@/hooks/useLinkHooks"
-import { Button } from "../global/Button"
-import { Plus } from "lucide-react"
 import { useAppState } from "@/store/useAppStateStore"
 import { useSingleCollection } from "@/hooks/useCollectionHooks"
 import LinkCard from "../links/LinkCard"
-import { H1, H2, Paragraph } from "../global/Text"
-import DropdownSearch from "../dashboard/Searchbar"
 import Empty from "../global/Empty"
 import CollectionMockup from "./CollectionMockup"
 import Loading from "../global/Loading"

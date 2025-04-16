@@ -1,5 +1,4 @@
 import { Logo } from "../global/Logo"
-import { H1 } from "../global/Text"
 import SidebarMenuBtn from "./SidebarMenuBtn"
 
 const Header = () => {

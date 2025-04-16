@@ -6,7 +6,6 @@ import CollectionCard from "./CollectionCard"
 import Empty from "../global/Empty"
 import { useAppState } from "@/store/useAppStateStore"
 import Loading from "../global/Loading"
-import { H1 } from "../global/Text"
 
 const Collections = () => {
   const { collections } = useCollections(auth.currentUser?.uid || "")
