@@ -2,7 +2,7 @@
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import Input from "../global/Input"
+import { Input } from "@/components/global/Input"
 import { Button } from "../global/Button"
 import Link from "next/link"
 import { LogoSmall } from "../global/Logo"
@@ -10,6 +10,7 @@ import { useFirebaseAuthError } from "@/hooks/useAuthHooks"
 import { toast } from "sonner"
 import { useAuthStore } from "@/store/useAuthStore"
 import { FirebaseError } from "firebase/app"
+import { useRouter } from "next/navigation"
 
 const schema = z.object({
   email: z.string().email("Invalid email address"),
@@ -29,6 +30,7 @@ type FormValues = z.infer<typeof schema>
 
 const LoginForm = () => {
   const { handleFirebaseAuthError } = useFirebaseAuthError()
+  const router = useRouter()
 
   const { loginUser } = useAuthStore()
   const {
@@ -44,6 +46,7 @@ const LoginForm = () => {
     try {
       await loginUser(data.email, data.password)
       toast.success("Login successful")
+      router.replace("/dashboard")
     } catch (error) {
       console.error(error)
       // Fix: Don't call hooks in event handlers
@@ -55,7 +58,7 @@ const LoginForm = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="mx-auto w-full max-w-[400px] space-y-6 rounded-2xl bg-white p-6 2xl:mr-0"
+      className="mx-auto w-full max-w-[400px] space-y-6 rounded-2xl bg-white 2xl:mr-0"
     >
       <LogoSmall />
       <div>
@@ -84,12 +87,13 @@ const LoginForm = () => {
         type="submit"
         loading={isSubmitting}
         disabled={!isValid || isSubmitting}
+        className="w-full"
       >
         Log in
       </Button>
-      <div className="flex flex-wrap justify-between gap-x-6 gap-y-2">
+      <div className="flex flex-wrap justify-between gap-x-12 gap-y-2">
         <p className="text-sm">
-          {`Don't have an account?`}
+          {`Don't have an account?`} {" "}
           <Link href="/signup" className="text-primary">
             Sign up
           </Link>

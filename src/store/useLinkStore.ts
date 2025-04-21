@@ -13,6 +13,7 @@ import {
   searchCollections,
   searchLinks,
 } from "@/services/linkServices"
+import { Timestamp } from "firebase/firestore"
 
 interface LinkStoreState {
   collections: CollectionType[] | undefined
@@ -28,6 +29,8 @@ interface LinkStoreState {
     description: string
     visibility: "public" | "private" | "unlisted"
     tags?: string[]
+    imageUrl?: string
+    collectionId: string
   }) => Promise<void>
   editCollection: (params: {
     collectionId: string
@@ -43,12 +46,13 @@ interface LinkStoreState {
     collectionId: string
   }) => Promise<void>
   addLink: (params: {
+    linkId: string
     userId: string
     collectionId: string
     title: string
     url: string
     description?: string
-    imageUrl?: string
+    imageUrl?: string | undefined
     visibility?: "public" | "private" | "unlisted"
     tags?: string[]
     pinned?: boolean
@@ -61,6 +65,7 @@ interface LinkStoreState {
     imageUrl?: string
     visibility?: "public" | "private" | "unlisted"
     pinned?: boolean
+    tags?: string[]
   }) => Promise<void>
   removeLink: (linkId: string) => Promise<void>
 
@@ -121,10 +126,20 @@ export const useLinkStore = create<LinkStoreState>((set) => ({
     description,
     visibility,
     tags = [],
+    imageUrl = "",
+    collectionId,
   }) => {
     set({ loading: true, error: null })
     try {
-      await createCollection({ userId, name, description, visibility, tags })
+      await createCollection({
+        collectionId,
+        userId,
+        name,
+        description,
+        visibility,
+        tags,
+        imageUrl,
+      })
       await useLinkStore.getState().fetchCollections(userId) // Refresh list
     } catch (error) {
       set({
@@ -211,6 +226,7 @@ export const useLinkStore = create<LinkStoreState>((set) => ({
   },
 
   addLink: async ({
+    linkId,
     userId,
     collectionId,
     title,
@@ -224,6 +240,7 @@ export const useLinkStore = create<LinkStoreState>((set) => ({
     set({ loading: true, error: null })
     try {
       await createLink({
+        linkId,
         userId,
         collectionId,
         title,
@@ -252,6 +269,7 @@ export const useLinkStore = create<LinkStoreState>((set) => ({
     imageUrl,
     visibility,
     pinned,
+    tags,
   }) => {
     set({ loading: true, error: null })
     try {
@@ -263,6 +281,7 @@ export const useLinkStore = create<LinkStoreState>((set) => ({
         imageUrl,
         visibility,
         pinned,
+        tags,
       })
 
       set((state) => ({
@@ -276,6 +295,7 @@ export const useLinkStore = create<LinkStoreState>((set) => ({
                 imageUrl: imageUrl ?? link.imageUrl,
                 visibility: visibility ?? link.visibility,
                 pinned: pinned ?? link.pinned,
+                tags: tags ?? link.tags,
               }
             : link
         ),

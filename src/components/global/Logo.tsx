@@ -13,7 +13,7 @@ export const Logo = () => {
 export const LogoSmall = () => {
   return (
     <div className="bg-primary aspect-square w-fit gap-1 rounded-lg p-2 font-semibold">
-      <SquareStackIcon className="text-primary" />
+      <SquareStackIcon className="text-white" />
     </div>
   )
 }

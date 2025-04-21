@@ -6,7 +6,7 @@ import {
   useCollections,
 } from "@/hooks/useCollectionHooks"
 import { auth } from "@/config/firebase"
-import { useAppState } from "@/store/useAppStateStore"
+import { useAppState } from "@/store/useAppStore"
 import { CollectionType } from "@/types/types"
 
 const DeleteCollectionModal = ({
@@ -21,7 +21,7 @@ const DeleteCollectionModal = ({
 
   const handleDelete = async () => {
     try {
-      await removeCollection(collection?.id ||'')
+      await removeCollection(collection?.id || "")
       closeModal()
     } catch (error) {
       console.error(error)

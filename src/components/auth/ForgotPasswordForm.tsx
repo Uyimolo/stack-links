@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import Input from "../global/Input"
+import { Input } from "@/components/global/Input"
 import { Button } from "../global/Button"
 import Link from "next/link"
 import { LogoSmall } from "../global/Logo"
@@ -45,7 +45,7 @@ const ForgotPasswordForm = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="mx-auto w-full max-w-[400px] space-y-6 rounded-2xl bg-white p-6"
+      className="mx-auto w-full max-w-[400px] space-y-6 rounded-2xl bg-white"
     >
       <LogoSmall />
       <div>
@@ -74,6 +74,7 @@ const ForgotPasswordForm = () => {
         type="submit"
         loading={isSubmitting}
         disabled={!isValid || isSubmitting}
+        className="w-full"
       >
         Send Reset Link
       </Button>

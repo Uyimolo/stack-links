@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import Input from "../global/Input"
+import { Input } from "@/components/global/Input"
 import { Button } from "../global/Button"
 import { LogoSmall } from "../global/Logo"
 import { confirmPasswordReset } from "firebase/auth"
@@ -61,7 +61,7 @@ const ResetPasswordForm = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="mx-auto w-full max-w-[400px] space-y-6 rounded-2xl bg-white p-6"
+      className="mx-auto w-full max-w-[400px] space-y-6 rounded-2xl bg-white"
     >
       <LogoSmall />
       <h1 className="text-text-primary text-2xl font-medium">
@@ -88,6 +88,7 @@ const ResetPasswordForm = () => {
         type="submit"
         loading={isSubmitting}
         disabled={!isValid || isSubmitting}
+        className="w-full"
       >
         Reset Password
       </Button>

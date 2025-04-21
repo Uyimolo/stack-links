@@ -2,7 +2,7 @@
 
 import { auth } from "@/config/firebase"
 import { useLinks } from "@/hooks/useLinkHooks"
-import { useAppState } from "@/store/useAppStateStore"
+import { useAppState } from "@/store/useAppStore"
 import { useSingleCollection } from "@/hooks/useCollectionHooks"
 import LinkCard from "../links/LinkCard"
 import Empty from "../global/Empty"
@@ -38,31 +38,35 @@ const Collection = ({ collectionId }: { collectionId: string }) => {
     }
   }, [loading, hasLoadedOnce])
 
-  return (
-    <>
-      <CollectionHeader name={name} />
-      <div className="items-start gap-6 p-4 xl:flex">
-        <div className="space-y-4">
-          {links === undefined ? (
-            <Loading className="h-[50vh]" loadingText="Getting your links" />
-          ) : links.length === 0 ? (
-            <Empty
-              text="No links in this collection yet."
-              buttonOnClick={openAddLinkModal}
-              buttonText="Add your first link"
-            />
-          ) : (
-            links.map((link: LinkType) => (
-              <LinkCard key={link.id} link={link} />
-            ))
-          )}
-        </div>
 
-        <div className="hidden w-full max-w-sm xl:sticky xl:top-4 xl:block">
-          <CollectionMockup />
+  return (
+    <div className="flex items-start">
+      <div className="">
+        <CollectionHeader name={name} collectionId={collectionId} />
+        <div className="items-start gap-6 p-4 xl:flex">
+          <div className="w-full space-y-4">
+            {links === undefined ? (
+              <Loading className="h-[50vh]" loadingText="Getting your links" />
+            ) : links.length === 0 ? (
+              <Empty
+                text="No links in this collection yet."
+                buttonOnClick={openAddLinkModal}
+                buttonText="Add your first link"
+              />
+            ) : (
+              links.map((link: LinkType) => (
+                <LinkCard key={link.id} link={link} />
+              ))
+            )}
+          </div>
         </div>
       </div>
-    </>
+      {links && links.length > 0 && (
+        <div className="top-4 hidden w-full max-w-sm xl:sticky xl:block">
+          <CollectionMockup />
+        </div>
+      )}
+    </div>
   )
 }
 

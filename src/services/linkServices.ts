@@ -1,4 +1,4 @@
-import {  db } from "@/config/firebase"
+import { db } from "@/config/firebase"
 import { CollectionType, LinkType } from "@/types/types"
 import {
   collection,
@@ -11,6 +11,7 @@ import {
   updateDoc,
   deleteDoc,
   Timestamp,
+  setDoc,
 } from "firebase/firestore"
 
 // ==============================
@@ -68,23 +69,33 @@ export const createCollection = async ({
   description,
   visibility,
   tags = [],
+  imageUrl,
+  collectionId,
+  createdAt = Timestamp.now(),
 }: {
   userId: string
   name: string
   description: string
   visibility: "public" | "private" | "unlisted"
   tags?: string[]
+  imageUrl: string
+  collectionId: string
+  createdAt?: Timestamp
 }) => {
-  const collectionsRef = collection(db, "allCollections")
-  const newDoc = await addDoc(collectionsRef, {
+  const collectionsRef = doc(db, "allCollections", collectionId)
+
+  await setDoc(collectionsRef, {
+    id: collectionId,
     ownerId: userId,
     name,
     description,
     visibility,
     tags,
-    createdAt: Timestamp.now(),
+    imageUrl,
+    createdAt,
   })
-  return newDoc.id
+
+  return collectionsRef
 }
 
 /**
@@ -123,7 +134,7 @@ export const deleteCollection = async (collectionId: string) => {
  * Fetch all links a user has
  */
 
-export const getAllLinks = async (userId:string): Promise<LinkType[]> => {
+export const getAllLinks = async (userId: string): Promise<LinkType[]> => {
   const allLinksRef = collection(db, "allLinks")
   const q = query(allLinksRef, where("ownerId", "==", userId))
   const querySnapshot = await getDocs(q)
@@ -178,9 +189,79 @@ export const getLinkById = async (linkId: string): Promise<LinkType | null> => {
 /**
  * Create a new link inside a collection
  */
+// export const createLink = async ({
+//   userId,
+//   collectionId,
+//   title,
+//   url,
+//   description = "",
+//   imageUrl = "",
+//   visibility = "public",
+//   tags = [],
+//   pinned = false,
+// }: {
+//   userId: string
+//   collectionId: string
+//   title: string
+//   url: string
+//   description?: string
+//   imageUrl?: string
+//   visibility?: "public" | "private" | "unlisted"
+//   tags?: string[]
+//   pinned?: boolean
+// }) => {
+//   // Input validation
+//   if (!userId || !collectionId || !title || !url) {
+//     throw new Error("Required fields are missing or invalid.")
+//   }
+
+//   // Fetch the collection to check its visibility
+//   const collectionRef = doc(db, "allCollections", collectionId)
+//   const collectionDoc = await getDoc(collectionRef)
+
+//   if (!collectionDoc.exists()) {
+//     console.error("Error: Collection not found or not accessible")
+//     throw new Error("Collection does not exist")
+//   }
+
+//   const collectionData = collectionDoc.data()
+
+//   // If collection is private, check if the user is the owner
+//   if (
+//     collectionData?.visibility === "private" &&
+//     collectionData?.ownerId !== userId
+//   ) {
+//     throw new Error(
+//       "You cannot add a link to a private collection you do not own"
+//     )
+//   }
+
+//   // Proceed to create the link
+//   const linksRef = collection(db, "allLinks")
+//   try {
+//     const newDoc = await addDoc(linksRef, {
+//       ownerId: userId,
+//       collectionId,
+//       title,
+//       url,
+//       description,
+//       imageUrl,
+//       visibility,
+//       tags,
+//       pinned,
+//       createdAt: Timestamp.now(),
+//     })
+//     return newDoc.id
+//   } catch (error) {
+//     console.error("Error creating link:", error)
+//     throw new Error("Failed to create link")
+//   }
+// }
+
 export const createLink = async ({
   userId,
   collectionId,
+  linkId,
   title,
   url,
   description = "",
@@ -188,9 +269,11 @@ export const createLink = async ({
   visibility = "public",
   tags = [],
   pinned = false,
+  createdAt = Timestamp.now(),
 }: {
   userId: string
   collectionId: string
+  linkId: string
   title: string
   url: string
   description?: string
@@ -198,24 +281,21 @@ export const createLink = async ({
   visibility?: "public" | "private" | "unlisted"
   tags?: string[]
   pinned?: boolean
+  createdAt?: Timestamp
 }) => {
-  // Input validation
-  if (!userId || !collectionId || !title || !url) {
+  if (!userId || !collectionId || !linkId || !title || !url) {
     throw new Error("Required fields are missing or invalid.")
   }
 
-  // Fetch the collection to check its visibility
   const collectionRef = doc(db, "allCollections", collectionId)
   const collectionDoc = await getDoc(collectionRef)
 
   if (!collectionDoc.exists()) {
-    console.error("Error: Collection not found or not accessible")
     throw new Error("Collection does not exist")
   }
 
   const collectionData = collectionDoc.data()
 
-  // If collection is private, check if the user is the owner
   if (
     collectionData?.visibility === "private" &&
     collectionData?.ownerId !== userId
@@ -225,26 +305,28 @@ export const createLink = async ({
     )
   }
 
-  // Proceed to create the link
-  const linksRef = collection(db, "allLinks")
-  try {
-    const newDoc = await addDoc(linksRef, {
-      ownerId: userId,
-      collectionId,
-      title,
-      url,
-      description,
-      imageUrl,
-      visibility,
-      tags,
-      pinned,
-      createdAt: Timestamp.now(),
-    })
-    return newDoc.id
-  } catch (error) {
-    console.error("Error creating link:", error)
-    throw new Error("Failed to create link")
+  const linkRef = doc(db, "allLinks", linkId)
+  const existingLinkDoc = await getDoc(linkRef)
+
+  if (existingLinkDoc.exists()) {
+    throw new Error("A link with this ID already exists")
   }
+
+  await setDoc(linkRef, {
+    id: linkId,
+    ownerId: userId,
+    collectionId,
+    title,
+    url,
+    description,
+    imageUrl,
+    visibility,
+    tags,
+    pinned,
+    createdAt,
+  })
+
+  return linkRef
 }
 
 /**
@@ -258,6 +340,7 @@ export const updateLink = async ({
   imageUrl,
   visibility,
   pinned,
+  tags
 }: {
   linkId: string
   title?: string
@@ -265,7 +348,8 @@ export const updateLink = async ({
   description?: string
   imageUrl?: string
   visibility?: "public" | "private" | "unlisted"
-  pinned?: boolean
+    pinned?: boolean
+  tags?:string[]
 }) => {
   const docRef = doc(db, "allLinks", linkId)
   const updates: Partial<LinkType> = {}

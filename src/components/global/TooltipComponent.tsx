@@ -22,7 +22,7 @@ const TooltipComponent = ({
       <Tooltip>
         <TooltipTrigger
           className={cn(
-            "grid h-6 w-6 place-content-center rounded-xl hover:bg-[#f1f1f1]",
+            "grid h-6 px-1 place-content-center rounded hover:bg-[#f1f1f1]",
             className
           )}
         >

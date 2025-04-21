@@ -7,6 +7,7 @@ export type CollectionType = {
   tags?: string[]
   createdAt: string
   updatedAt?: string
+  imageUrl?: string
 }
 
 export type LinkType = {
@@ -40,4 +41,16 @@ export type ModalState = {
     collectionId?: string
     link?: LinkType
   }
+}
+
+export type ExtentedComponentVariant =
+  | "delete link"
+  | "share link"
+  | "upload link image"
+  | "view tags"
+  | null
+
+export type LinkCardExtensionState = {
+  extendedComponentVariant: ExtentedComponentVariant
+  linkId: string | null
 }

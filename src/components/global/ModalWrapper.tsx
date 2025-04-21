@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
-import { useAppState } from "@/store/useAppStateStore"
+import { useAppState } from "@/store/useAppStore"
 import AddCollectionModal from "../collections/AddCollectionModal"
 import UpdateCollectionModal from "../collections/UpdateCollectionModal"
 import DeleteCollectionModal from "../collections/DeleteCollectionModal"
@@ -49,7 +49,7 @@ function ModalWrapper() {
       onClick={closeModal}
     >
       <ScrollArea
-        className="max-h-[90vh] rounded-lg shadow-lg"
+        className=" max-h-[90vh] h-full rounded-lg shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
         {renderModal()}

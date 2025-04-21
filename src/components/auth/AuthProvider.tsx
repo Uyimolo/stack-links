@@ -4,7 +4,7 @@ import { useEffect } from "react"
 import { usePathname, useRouter } from "next/navigation"
 
 // Protected routes that require authentication
-const protectedRoutes = ["/dashboard", "/account", "/settings"]
+const protectedRoutes = ["/dashboard", "/account", "/settings", "/collections"]
 
 export default function AuthProvider({
   children,

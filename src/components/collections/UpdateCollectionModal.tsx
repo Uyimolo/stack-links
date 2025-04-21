@@ -1,10 +1,10 @@
 "use client"
 
-import { useForm } from "react-hook-form"
+import { Controller, useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import React, { useState } from "react"
-import { useAppState } from "@/store/useAppStateStore"
+import { useAppState } from "@/store/useAppStore"
 import { useCollectionActions } from "@/hooks/useCollectionHooks"
 import { CollectionType } from "@/types/types"
 import {
@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import Input from "../global/Input"
+import { FileInput, Input } from "../global/Input"
 import { Button } from "../global/Button"
 import { X } from "lucide-react"
 
@@ -26,6 +26,13 @@ const schema = z.object({
   description: z.string().optional(),
   visibility: z.enum(["public", "private", "unlisted"]).optional(),
   tags: z.string().optional(),
+  image: z
+    .instanceof(File)
+    .refine((file) => file.size <= 5 * 1024 * 1024, "Max file size is 5MB")
+    .refine(
+      (file) => file.type.startsWith("image/"),
+      "Only image files allowed"
+    ),
 })
 
 type FormData = z.infer<typeof schema>
@@ -41,6 +48,7 @@ const UpdateCollectionModal = ({
 
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
     setValue,
@@ -102,6 +110,7 @@ const UpdateCollectionModal = ({
           error={errors.name?.message}
         />
         <Input
+          label="Description"
           type="textarea"
           register={register}
           name="description"
@@ -118,7 +127,7 @@ const UpdateCollectionModal = ({
               setValue("visibility", val as "public" | "private" | "unlisted")
             }
           >
-            <SelectTrigger className="w-full border p-3 text-sm">
+            <SelectTrigger className="h-full w-full border p-5 px-3 text-sm">
               <SelectValue placeholder="Select visibility" />
             </SelectTrigger>
             <SelectContent>
@@ -131,13 +140,28 @@ const UpdateCollectionModal = ({
             <p className="text-sm text-red-500">{errors.visibility.message}</p>
           )}
         </div>
+
         <Input
           type="text"
           register={register}
           name="tags"
           placeholder="Enter tags (comma separated)"
           error={errors.tags?.message}
+          label="Tags"
         />
+
+        <Controller
+          control={control}
+          name="image"
+          render={({ field, fieldState }) => (
+            <FileInput
+              value={field.value}
+              onChange={field.onChange}
+              error={fieldState.error?.message}
+            />
+          )}
+        />
+
         <Button type="submit" className="bg-primary w-full text-white">
           Update Collection
         </Button>

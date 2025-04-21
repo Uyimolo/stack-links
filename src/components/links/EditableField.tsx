@@ -1,5 +1,5 @@
 import { UseFormRegister } from "react-hook-form"
-import Input from "../global/Input"
+import { Input } from "@/components/global/Input"
 import { Edit3 } from "lucide-react"
 import TooltipComponent from "../global/TooltipComponent"
 import { Paragraph } from "../global/Text"
@@ -55,7 +55,7 @@ const EditableField = ({
     >
       {field === "title" ? (
         <Paragraph
-          className={`${type === "textarea" ? "line-clamp-2" : "line-clamp-1"} text-text-primary text-sm capitalize`}
+          className={`${type === "textarea" ? "line-clamp-2" : "line-clamp-1"} w-fit text-text-primary text-sm capitalize`}
           // variant="primary"
         >
           {value || "No value"}
@@ -63,13 +63,13 @@ const EditableField = ({
       ) : (
         <TooltipComponent
           content={value || "No value"}
-          className="place-content-star w-fit border border-transparent text-left hover:bg-transparent"
+          className="border border-transparent h-fit text-left hover:bg-transparent p-0"
           trigger={
             <Paragraph
               className={`${type === "textarea" ? "line-clamp-2" : "line-clamp-1"} text-sm`}
             >
               {value ||
-                `${field === "description" ? "No description" : "No value"}`}
+                `${field === "description" ? "Add description" : "Add link address"}`}
             </Paragraph>
           }
         />

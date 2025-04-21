@@ -1,6 +1,6 @@
 "use client"
 import { cn } from "@/lib/cn"
-import { useAppState } from "@/store/useAppStateStore"
+import { useAppState } from "@/store/useAppStore"
 import { MenuIcon, X } from "lucide-react"
 import React from "react"
 
@@ -13,7 +13,9 @@ const SidebarMenuBtn = ({ mode = "closed" }: { mode?: "open" | "closed" }) => {
       onClick={toggleSidebar}
     >
       {showSidebar ? (
-        <X className={cn("text-text-secondary", mode === "closed" && "hidden")} />
+        <X
+          className={cn("text-text-secondary", mode === "closed" && "hidden")}
+        />
       ) : (
         <MenuIcon
           className={cn("text-text-secondary", mode === "open" && "hidden")}

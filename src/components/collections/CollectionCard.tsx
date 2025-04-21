@@ -6,28 +6,35 @@ import VisibilityBadge from "../global/VisibilityBadge"
 import { H4, Paragraph } from "../global/Text"
 
 const CollectionCard = ({ collection }: { collection: CollectionType }) => {
-  const { id, name, description, visibility, tags = [] } = collection
+  const { id, name, description, visibility, imageUrl, tags = [] } = collection
 
   return (
     <Link
       href={`/collections/${id}`}
-      className="group border-grey relative flex h-[210px] w-full flex-col gap-2 rounded-lg border px-4 py-3 transition-all duration-300 hover:border-gray-300 hover:shadow-sm lg:w-[calc(50%-8px)] xl:w-[calc(33%-8px)]"
+      className="group border-grey hover:border-grey-3 relative flex h-[210px] w-full flex-col justify-between rounded-lg border bg-cover px-4 py-3 transition-all duration-300 hover:shadow-sm lg:w-[calc(50%-8px)] xl:w-[calc(33%-8px)]"
     >
-      {/* Card Header */}
-      <div className="flex items-center justify-between">
-        <H4 className="font-semibold capitalize">{name}</H4>
+      <div className="space-y-3 gap-3 flex">
+        <div
+          className="aspect-square h-20 rounded-sm border bg-white bg-cover"
+          style={{ backgroundImage: `url(${imageUrl})` }}
+        ></div>
+        <div className="space-y-3">
+          {/* name and actions */}
+          <div className="flex w-full items-center justify-between gap-4">
+            <H4 className="font-semibold capitalize">{name}</H4>
+            <CollectionCardActions collection={collection} />
+          </div>
 
-        <CollectionCardActions collection={collection} />
+          {description && (
+            <Paragraph className="text-text-secondary line-clamp-3 h-16 font-light">
+              {description}
+            </Paragraph>
+          )}
+        </div>
       </div>
 
-      {description && (
-        <Paragraph className="text-text-secondary line-clamp-3 h-16 font-light">
-          {description}
-        </Paragraph>
-      )}
-
       {/* Footer */}
-      <div className="mt-3 flex flex-col gap-3">
+      <div className="flex h-fit flex-col gap-3">
         {/* Visibility Badge */}
         <VisibilityBadge visibility={visibility} />
 

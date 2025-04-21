@@ -2,7 +2,7 @@
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import Input from "../global/Input"
+import { Input } from "@/components/global/Input"
 import { Button } from "../global/Button"
 import Link from "next/link"
 import { LogoSmall } from "../global/Logo"
@@ -89,7 +89,7 @@ const SignupForm = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="mx-auto w-full max-w-[400px] space-y-6 rounded-2xl bg-white p-6 2xl:mr-0"
+      className="mx-auto w-full max-w-[400px] space-y-6 rounded-2xl bg-white 2xl:mr-0"
     >
       <LogoSmall />
       <div className="">
@@ -120,6 +120,7 @@ const SignupForm = () => {
         type="submit"
         loading={isSubmitting}
         disabled={!isValid || isSubmitting}
+        className="w-full"
       >
         Sign up
       </Button>

@@ -20,10 +20,8 @@ const Empty = ({
         alt="Empty resource"
         className="mx-auto w-full max-w-[280px] md:w-2/5 md:max-w-sm"
         priority
-        
       />
       <Paragraph className="text-center text-base">{text}</Paragraph>
-
       <Button onClick={buttonOnClick} className="mx-auto w-full max-w-xs">
         <Plus />
         {buttonText}

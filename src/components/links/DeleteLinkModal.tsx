@@ -2,7 +2,7 @@ import { X } from "lucide-react"
 import React from "react"
 import { Button } from "../global/Button"
 import { auth } from "@/config/firebase"
-import { useAppState } from "@/store/useAppStateStore"
+import { useAppState } from "@/store/useAppStore"
 import { LinkType } from "@/types/types"
 import { useLinkActions, useLinks } from "@/hooks/useLinkHooks"
 
@@ -50,10 +50,7 @@ const DeleteLinkModal = ({ link }: { link: LinkType }) => {
           <Button variant="outline" onClick={closeModal} disabled={loading}>
             Cancel
           </Button>
-          <Button
-            variant="destructive"
-            onClick={handleDelete}
-          >
+          <Button variant="destructive" onClick={handleDelete}>
             Delete
           </Button>
         </div>
