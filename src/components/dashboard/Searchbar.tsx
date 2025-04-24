@@ -174,7 +174,7 @@ export default function DropdownSearch() {
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
           onFocus={() => query.trim() && setIsOpen(true)}
-          className="border-grey-3 h-12 w-full rounded-lg border px-4 text-sm focus:ring-0 focus:ring-transparent"
+          className="border-grey-3 bg-white h-12 w-full rounded-lg border px-4 text-sm focus:ring-0 focus:ring-transparent"
           aria-haspopup="listbox"
         />
         <div className="absolute top-1/2 right-4 -translate-y-1/2">

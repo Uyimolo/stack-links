@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore"
+
 export type CollectionType = {
   id: string
   ownerId: string
@@ -31,6 +33,7 @@ export type ModalType =
   | "delete collection"
   | "add link"
   | "delete link"
+  | "view mockup"
   | null
 
 export type ModalState = {
@@ -53,4 +56,21 @@ export type ExtentedComponentVariant =
 export type LinkCardExtensionState = {
   extendedComponentVariant: ExtentedComponentVariant
   linkId: string | null
+}
+
+export type User = {
+  id: string
+  email: string
+  username: string
+  displayName?: string
+  photoUrl?: string
+  bio?: string
+  createdAt: Timestamp
+  updatedAt: Timestamp
+  plan?: "free" | "pro" | "admin"
+  isAdmin?: boolean
+  preferences?: {
+    theme: "light" | "dark" | "system"
+    layout: "grid" | "list"
+  }
 }

@@ -3,7 +3,7 @@ import type {
   ExtentedComponentVariant,
   LinkCardExtensionState,
   ModalState,
-} from "@/types/types"
+} from "@/types/types" 
 
 interface AppState {
   showSidebar: boolean

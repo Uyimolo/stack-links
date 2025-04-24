@@ -2,7 +2,6 @@ import { Trash, Share2, ImageIcon, BarChart2Icon, Tags } from "lucide-react"
 import TooltipComponent from "../global/TooltipComponent"
 import { LinkType } from "@/types/types"
 import { useAppState } from "@/store/useAppStore"
-import { Paragraph } from "../global/Text"
 
 const LinkActions = ({ link }: { link: LinkType }) => {
   const { id } = link

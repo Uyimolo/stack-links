@@ -38,6 +38,7 @@ interface LinkStoreState {
     description: string
     visibility: "public" | "private" | "unlisted"
     tags: string[]
+    imageUrl?: string
   }) => Promise<void>
   removeCollection: (collectionId: string) => Promise<void>
 
@@ -157,6 +158,7 @@ export const useLinkStore = create<LinkStoreState>((set) => ({
     description,
     visibility,
     tags,
+    imageUrl,
   }) => {
     set({ loading: true, error: null })
     try {
@@ -166,6 +168,7 @@ export const useLinkStore = create<LinkStoreState>((set) => ({
         description,
         visibility,
         tags,
+        imageUrl,
       })
       set((state) => ({
         collections: (state.collections ?? []).map((col) =>
@@ -174,6 +177,7 @@ export const useLinkStore = create<LinkStoreState>((set) => ({
             : col
         ),
       }))
+
     } catch (error) {
       set({
         error:

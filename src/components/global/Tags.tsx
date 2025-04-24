@@ -20,7 +20,10 @@ const Tags = ({ tags }: { tags: string[] }) => {
           ))}
           {tags.length > 3 && !showAllTags && (
             <button
-              onClick={() => setShowAllTags(true)}
+              onClick={(e) => {
+                e.stopPropagation()
+                setShowAllTags(true)
+              }}
               className="text-text-muted text-xs text-nowrap"
             >
               See More
@@ -28,7 +31,10 @@ const Tags = ({ tags }: { tags: string[] }) => {
           )}
           {showAllTags && (
             <button
-              onClick={() => setShowAllTags(false)}
+              onClick={(e) => {
+                e.stopPropagation()
+                setShowAllTags(false)
+              }}
               className="text-text-muted text-xs text-nowrap"
             >
               See Less

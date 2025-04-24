@@ -14,7 +14,6 @@ const LinkCardExtension = ({ link }: { link: LinkType }) => {
 
   const {
     linkCardExtensionState: { extendedComponentVariant, linkId },
-    updateLinkCardExtension,
     closeLinkCardExtension,
   } = useAppState()
 

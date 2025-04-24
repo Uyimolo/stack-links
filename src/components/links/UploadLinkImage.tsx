@@ -26,11 +26,7 @@ const UploadLinkImage = ({ link }: { link: LinkType }) => {
   const { editLink } = useLinkActions()
   const uid = auth.currentUser?.uid || ""
 
-  const {
-    control,
-    watch,
-    formState: { errors },
-  } = useForm<FormData>({
+  const { control, watch } = useForm<FormData>({
     resolver: zodResolver(schema),
     mode: "onChange",
   })

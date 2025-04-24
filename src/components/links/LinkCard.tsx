@@ -20,7 +20,7 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>
 
 const LinkCard = ({ link }: { link: LinkType }) => {
-  const { id, title, url, description, tags = [] } = link
+  const { id, title, url, description } = link
   const { editLink } = useLinkActions()
   const [editField, setEditField] = useState<keyof FormData | null>(null)
 
@@ -65,15 +65,15 @@ const LinkCard = ({ link }: { link: LinkType }) => {
   const values = watch()
 
   return (
-    <div className="hover:border-primary border-grey-3 overflow-hidden rounded-xl border bg-white transition duration-300">
+    <div className="hover:bg-grey-6 border-grey-3/40 overflow-hidden rounded-xl border bg-white shadow transition duration-300">
       <div className="group flex w-full items-center gap-3 p-4 transition duration-300">
         {/* header */}
 
         <GripVertical className="text-muted-foreground w-4 cursor-grab" />
 
-        <div className="w-full space-y-3">
+        <div className="w-full space-y-3 border-l pl-2">
           <div className="">
-            <div className="flex items-start justify-between">
+            <div className="flex items-start justify-between gap-4">
               <EditableField
                 field="title"
                 value={values.title}

@@ -87,7 +87,7 @@ const Sidebar = () => {
 
       <div
         className={cn(
-          "border-grey-5 fixed top-0 left-0 z-10 min-h-screen w-[300px] -translate-x-[100%] space-y-4 bg-white transition-all duration-300 ease-in-out md:absolute md:top-0 md:w-[250px] md:translate-x-0 md:border-r",
+          "border-grey-5 fixed top-0 left-0 z-10 min-h-screen w-[300px] -translate-x-[100%] space-y-4 bg-grey-6 transition-all duration-300 ease-in-out md:top-0 md:w-[250px] md:translate-x-0 md:border-r",
           showSidebar ? "translate-x-0" : "-translate-x-[100%] md:translate-x-0"
         )}
       >

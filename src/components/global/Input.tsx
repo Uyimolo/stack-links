@@ -180,7 +180,7 @@ export const FileInput = ({
         )} */}
 
         {loading ? (
-          <Loader2 />
+          <Loader2 className="mx-auto animate-spin"/>
         ) : !previewUrl ? (
           <ImageUploadSVG className="pointer-events-none mx-auto fill-blue-400" />
         ) : (

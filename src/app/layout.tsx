@@ -34,10 +34,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`bg-white font-montserrat min-h-screen w-full ${nunito.variable} ${inter.variable} ${montserrat.variable} `}
+        className={`font-montserrat min-h-screen w-full bg-white ${nunito.variable} ${inter.variable} ${montserrat.variable} `}
       >
         <AuthProvider>{children}</AuthProvider>
-        <Toaster richColors position="top-right" />
+        <Toaster richColors position="top-right" />          
         <ModalWrapper />
       </body>
     </html>

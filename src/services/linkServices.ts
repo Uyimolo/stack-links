@@ -7,7 +7,6 @@ import {
   where,
   getDocs,
   getDoc,
-  addDoc,
   updateDoc,
   deleteDoc,
   Timestamp,
@@ -107,15 +106,17 @@ export const updateCollection = async ({
   description,
   visibility,
   tags,
+  imageUrl,
 }: {
   collectionId: string
   name: string
   description: string
   visibility: "public" | "private" | "unlisted"
   tags: string[]
+  imageUrl?: string
 }) => {
   const docRef = doc(db, "allCollections", collectionId)
-  await updateDoc(docRef, { name, description, visibility, tags })
+  await updateDoc(docRef, { name, description, visibility, tags, imageUrl })
 }
 
 /**
@@ -340,7 +341,7 @@ export const updateLink = async ({
   imageUrl,
   visibility,
   pinned,
-  tags
+  tags,
 }: {
   linkId: string
   title?: string
@@ -348,8 +349,8 @@ export const updateLink = async ({
   description?: string
   imageUrl?: string
   visibility?: "public" | "private" | "unlisted"
-    pinned?: boolean
-  tags?:string[]
+  pinned?: boolean
+  tags?: string[]
 }) => {
   const docRef = doc(db, "allLinks", linkId)
   const updates: Partial<LinkType> = {}
@@ -360,6 +361,7 @@ export const updateLink = async ({
   if (imageUrl) updates.imageUrl = imageUrl
   if (visibility) updates.visibility = visibility
   if (typeof pinned === "boolean") updates.pinned = pinned
+  if (tags) updates.tags = tags
 
   await updateDoc(docRef, updates)
 }

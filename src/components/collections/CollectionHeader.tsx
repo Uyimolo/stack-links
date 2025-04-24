@@ -23,7 +23,7 @@ const CollectionHeader = ({
           <H1 className="font-semibold text-white capitalize md:font-bold">
             {name}
           </H1>
-          <Paragraph className="text-grey-5 max-w-lg lg:text-lg">
+          <Paragraph className="text-grey-5 max-w-lg">
             Manage your links below. Add, edit, or remove them anytime.
           </Paragraph>
         </div>

@@ -17,6 +17,9 @@ import {
 import { FileInput, Input } from "../global/Input"
 import { Button } from "../global/Button"
 import { X } from "lucide-react"
+import { auth } from "@/config/firebase"
+import { useCloudinaryUpload } from "@/hooks/useCloudinary"
+import { toast } from "sonner"
 
 const schema = z.object({
   name: z
@@ -32,7 +35,8 @@ const schema = z.object({
     .refine(
       (file) => file.type.startsWith("image/"),
       "Only image files allowed"
-    ),
+    )
+    .optional(),
 })
 
 type FormData = z.infer<typeof schema>
@@ -43,8 +47,9 @@ const UpdateCollectionModal = ({
   collection: CollectionType
 }) => {
   const { updateModal } = useAppState()
-  const { editCollection } = useCollectionActions()
+  const { editCollection, loading } = useCollectionActions()
   const [error, setError] = useState<string | null>(null)
+  const { upload, error: cloudinaryError } = useCloudinaryUpload()
 
   const {
     register,
@@ -72,12 +77,28 @@ const UpdateCollectionModal = ({
           ?.split(",")
           .map((tag) => tag.trim())
           .filter(Boolean) || []
+
+      let imageUrl = ""
+
+      if (data.image) {
+        const userId = auth.currentUser?.uid || ""
+        const publicId = `collections/${userId}-${collection.id}`
+        const result = await upload(data.image, publicId)
+        if (!result || cloudinaryError) {
+          toast.error("Image upload failed")
+          return
+        }
+
+        imageUrl = result
+      }
+
       await editCollection({
         collectionId: collection.id,
         name: data.name ?? "",
         description: data.description ?? "",
         visibility: data.visibility ?? "public",
         tags: tagsArray,
+        imageUrl: imageUrl ?? collection.imageUrl,
       })
       updateModal({ status: "close", modalType: null })
     } catch (err) {
@@ -85,6 +106,8 @@ const UpdateCollectionModal = ({
       setError("Failed to update collection. Please try again.")
     }
   }
+
+  console.log(collection)
 
   return (
     <div className="w-[calc(100vw-48px)] max-w-sm rounded-lg bg-white p-6 shadow-lg md:max-w-md">
@@ -162,7 +185,11 @@ const UpdateCollectionModal = ({
           )}
         />
 
-        <Button type="submit" className="bg-primary w-full text-white">
+        <Button
+          type="submit"
+          loading={loading}
+          className="bg-primary w-full text-white"
+        >
           Update Collection
         </Button>
       </form>

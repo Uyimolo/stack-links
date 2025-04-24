@@ -8,6 +8,7 @@ import DeleteCollectionModal from "../collections/DeleteCollectionModal"
 import AddLinkModal from "../links/AddLinkModal"
 import DeleteLinkModal from "../links/DeleteLinkModal"
 import { ScrollArea } from "../ui/scroll-area"
+import CollectionMockupModal from "../collections/CollectionMockupModal"
 
 function ModalWrapper() {
   const { modalState, closeModal } = useAppState()
@@ -38,6 +39,9 @@ function ModalWrapper() {
       case "delete link":
         if (!modalProps?.link) return null
         return <DeleteLinkModal link={modalProps.link} />
+      case "view mockup":
+        if (!modalProps?.collectionId) return null
+        return <CollectionMockupModal collectionId={modalProps.collectionId} />
       default:
         return null
     }
@@ -45,11 +49,11 @@ function ModalWrapper() {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex h-screen w-full items-center justify-center bg-black/40 px-4"
+      className="fixed inset-0 z-50 flex h-screen w-full items-center justify-center bg-black/60 px-4"
       onClick={closeModal}
     >
       <ScrollArea
-        className=" max-h-[90vh] h-full rounded-lg shadow-lg"
+        className="h-full max-h-[90vh] rounded-lg shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
         {renderModal()}

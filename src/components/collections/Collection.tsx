@@ -9,19 +9,16 @@ import Empty from "../global/Empty"
 import CollectionMockup from "./CollectionMockup"
 import Loading from "../global/Loading"
 import { LinkType } from "@/types/types"
-import { useEffect, useState } from "react"
 import CollectionHeader from "./CollectionHeader"
+import { Eye } from "lucide-react"
 // import { useLinkStore } from "@/store/useLinkStore"
 
 const Collection = ({ collectionId }: { collectionId: string }) => {
   const userId = auth.currentUser?.uid || ""
-  const { links, loading } = useLinks(userId, collectionId)
+  const { links } = useLinks(userId, collectionId)
   const { updateModal } = useAppState()
   const { collection } = useSingleCollection(userId, collectionId)
   const name = collection?.name || "Collection Loading..."
-
-  // Track if we've completed the first load
-  const [hasLoadedOnce, setHasLoadedOnce] = useState(false)
 
   const openAddLinkModal = () => {
     updateModal({
@@ -31,18 +28,11 @@ const Collection = ({ collectionId }: { collectionId: string }) => {
     })
   }
 
-  useEffect(() => {
-    // When loading finishes and we haven't marked first load as complete, do so
-    if (!loading && !hasLoadedOnce) {
-      setHasLoadedOnce(true)
-    }
-  }, [loading, hasLoadedOnce])
-
-
   return (
     <div className="flex items-start">
-      <div className="">
+      <div className="w-full">
         <CollectionHeader name={name} collectionId={collectionId} />
+
         <div className="items-start gap-6 p-4 xl:flex">
           <div className="w-full space-y-4">
             {links === undefined ? (
@@ -61,11 +51,29 @@ const Collection = ({ collectionId }: { collectionId: string }) => {
           </div>
         </div>
       </div>
-      {links && links.length > 0 && (
-        <div className="top-4 hidden w-full max-w-sm xl:sticky xl:block">
-          <CollectionMockup />
+
+      <div className="top-4 hidden w-full max-w-sm xl:block">
+        <div className="fixed flex h-screen w-full max-w-sm items-center justify-center">
+          <div className="">
+            <CollectionMockup collectionId={collectionId} />
+          </div>
         </div>
-      )}
+      </div>
+
+      <div
+        className="fixed xl:hidden right-2 bottom-10 grid aspect-square h-12 place-content-center rounded-full border bg-[#333333] p-2"
+        onClick={() =>
+          updateModal({
+            status: "open",
+            modalType: "view mockup",
+            modalProps: { collectionId },
+          })
+        }
+      >
+        <button className="text-xs text-white">
+          <Eye />
+        </button>
+      </div>
     </div>
   )
 }

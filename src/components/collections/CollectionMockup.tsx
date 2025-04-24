@@ -1,8 +1,57 @@
+import { auth } from "@/config/firebase"
+import { useLinks } from "@/hooks/useLinkHooks"
 import React from "react"
+import { Paragraph } from "../global/Text"
+import { DropdownMenu } from "../ui/dropdown-menu"
+import {
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@radix-ui/react-dropdown-menu"
+import { MoreVertical } from "lucide-react"
+import Loading from "../global/Loading"
 
-const CollectionMockup = () => {
+const CollectionMockup = ({ collectionId }: { collectionId: string }) => {
+  const userId = auth.currentUser?.uid || ""
+  const { links } = useLinks(userId, collectionId)
+
   return (
-    <div className="border-border-dark mx-auto aspect-[9/16] w-full max-w-[250px] rounded-3xl border-4 xl:aspect-[9/18]"></div>
+    <div className="border-grey-2 mx-auto flex aspect-[9/18] h-[90vh] max-h-[650px] flex-col space-y-4 rounded-3xl border-4 bg-[#111111] p-2 xl:h-[70vh]">
+      <div className="bg-grey-1 mx-auto h-3 w-3 rounded-full"></div>
+
+      <div className="mx-auto aspect-square w-20 rounded-full border"></div>
+
+      <Paragraph className="truncate text-center text-xs text-white">
+        {"@" + auth.currentUser?.email || "Email loading..."}
+      </Paragraph>
+      <div className="mt-4 space-y-2">
+        {links === undefined && <Loading className="h-40" />}
+
+        {links
+          ?.filter((link) => link.visibility !== "private")
+          .map((link, index) => (
+            <div
+              key={index}
+              className="flex items-center gap-1 overflow-hidden rounded-full bg-white p-1"
+            >
+              <div
+                className="bg-grey-3 aspect-square w-8 rounded-full border bg-cover"
+                style={{ backgroundImage: `url(${link.imageUrl})` }}
+              ></div>
+
+              <Paragraph className="w-full text-center text-[11px] line-clamp-1 capitalize">
+                {link.title}
+              </Paragraph>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <MoreVertical className="text-grey-1 w-4" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent></DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          ))}
+      </div>
+    </div>
   )
 }
 

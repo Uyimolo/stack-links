@@ -1,14 +1,17 @@
 import { LinkType } from "@/types/types"
 import { Paragraph } from "../global/Text"
 import { Button } from "../global/Button"
+import { useLinkActions } from "@/hooks/useLinkHooks"
 
 const DeleteLink = ({ link }: { link: LinkType }) => {
+  const { removeLink } = useLinkActions()
+
   return (
     <div className="flex flex-col gap-6 p-4">
       <div className="space-y-2">
         <Paragraph className="text-text-primary text-sm">
           Are you sure you want to{" "}
-          <span className="text-destructive font-semibold">delete</span> this
+          <span className=" font-semibold">delete</span> this
           link? This action cannot be undone.
         </Paragraph>
         <Paragraph className="text-text-secondary text-sm">
@@ -18,7 +21,7 @@ const DeleteLink = ({ link }: { link: LinkType }) => {
       </div>
 
       <div className="flex flex-col gap-3 md:flex-row">
-        <Button className="w-full" variant="destructive">
+        <Button className="w-full" onClick={() => removeLink(link.id)}>
           Permanently Delete
         </Button>
         <Button className="w-full" variant="secondary">
