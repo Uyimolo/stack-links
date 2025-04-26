@@ -1,23 +1,23 @@
-"use client"
-import { useCallback, useState, useEffect } from "react"
-import { FieldValues, Path, UseFormRegister } from "react-hook-form"
-import { Eye, EyeOff, Loader2 } from "lucide-react"
-import { cn } from "@/lib/cn"
-import { ImageUploadSVG } from "./SVGS"
-import { useDropzone } from "react-dropzone"
+"use client";
+import { useCallback, useState, useEffect } from "react";
+import { FieldValues, Path, UseFormRegister } from "react-hook-form";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { cn } from "@/lib/cn";
+import { ImageUploadSVG } from "./SVGS";
+import { useDropzone } from "react-dropzone";
 
 interface InputProps<T extends FieldValues> {
-  className?: string // Optional className for custom styling
-  name: Path<T> // Ensures name matches form fields
-  label?: string
-  type?: string
-  placeholder?: string
-  register: UseFormRegister<T>
-  error?: string
-  rows?: number // Optional rows for textarea
-  resize?: boolean // Optional prop to control textarea resizing
-  autoFocus?: boolean // Optional prop to control autofocus
-  onBlur?: () => void // Optional onBlur event handler
+  className?: string; // Optional className for custom styling
+  name: Path<T>; // Ensures name matches form fields
+  label?: string;
+  type?: string;
+  placeholder?: string;
+  register: UseFormRegister<T>;
+  error?: string;
+  rows?: number; // Optional rows for textarea
+  resize?: boolean; // Optional prop to control textarea resizing
+  autoFocus?: boolean; // Optional prop to control autofocus
+  onBlur?: () => void; // Optional onBlur event handler
 }
 
 export const Input = <T extends FieldValues>({
@@ -33,11 +33,11 @@ export const Input = <T extends FieldValues>({
   autoFocus = false, // Default to false for autofocus
   onBlur,
 }: InputProps<T>) => {
-  const [showPassWord, setShowPassword] = useState(false)
+  const [showPassWord, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
-    setShowPassword(!showPassWord)
-  }
+    setShowPassword(!showPassWord);
+  };
 
   return (
     <div className="flex w-full flex-col gap-1">
@@ -57,7 +57,7 @@ export const Input = <T extends FieldValues>({
             placeholder={placeholder}
             className={cn(
               "border-grey-3 text-text-secondary w-full rounded-lg border px-3 py-3 text-sm",
-              className
+              className,
             )}
             autoFocus={autoFocus}
             onBlur={onBlur}
@@ -85,7 +85,7 @@ export const Input = <T extends FieldValues>({
           className={cn(
             "border-grey-3 text-text-secondary w-full rounded-lg border px-3 py-3 text-sm",
             className,
-            resize ? "resize-y" : "resize-none"
+            resize ? "resize-y" : "resize-none",
           )}
           autoFocus={autoFocus}
           onBlur={onBlur}
@@ -100,7 +100,7 @@ export const Input = <T extends FieldValues>({
           // className="border-border-light text-text-secondary w-full rounded-lg border px-3 py-3 text-sm"
           className={cn(
             "border-grey-3 text-text-secondary w-full rounded-lg border px-3 py-3 text-sm",
-            className
+            className,
           )}
           autoFocus={autoFocus}
           onBlur={onBlur}
@@ -109,15 +109,15 @@ export const Input = <T extends FieldValues>({
 
       {error && <p className="text-xs text-red-400">{error}</p>}
     </div>
-  )
-}
+  );
+};
 
 interface FileInputProps {
-  value: File | undefined
-  onChange: (file: File | null) => void
-  error?: string
-  loading?: boolean
-  imageUrl?: string
+  value: File | undefined;
+  onChange: (file: File | null) => void;
+  error?: string;
+  loading?: boolean;
+  imageUrl?: string;
 }
 
 export const FileInput = ({
@@ -127,35 +127,35 @@ export const FileInput = ({
   loading,
   imageUrl = "",
 }: FileInputProps) => {
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
-      const file = acceptedFiles[0]
-      if (!file) return
+      const file = acceptedFiles[0];
+      if (!file) return;
 
-      if (!file.type.startsWith("image/")) return
-      if (file.size > 5 * 1024 * 1024) return
+      if (!file.type.startsWith("image/")) return;
+      if (file.size > 5 * 1024 * 1024) return;
 
-      onChange(file)
+      onChange(file);
     },
-    [onChange]
-  )
+    [onChange],
+  );
 
   useEffect(() => {
-    if (!value) return
+    if (!value) return;
 
-    const objectUrl = URL.createObjectURL(value)
-    setPreviewUrl(objectUrl)
+    const objectUrl = URL.createObjectURL(value);
+    setPreviewUrl(objectUrl);
 
-    return () => URL.revokeObjectURL(objectUrl)
-  }, [value])
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [value]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     multiple: false,
     accept: { "image/*": [] },
-  })
+  });
 
   return (
     <div className="w-full">
@@ -165,7 +165,7 @@ export const FileInput = ({
           "relative mx-auto grid aspect-square h-40 place-content-center rounded-3xl border-2 border-dashed transition",
           isDragActive
             ? "border-blue-400 bg-blue-50"
-            : "border-gray-300 bg-white"
+            : "border-gray-300 bg-white",
         )}
         style={{
           backgroundImage: previewUrl
@@ -180,7 +180,7 @@ export const FileInput = ({
         )} */}
 
         {loading ? (
-          <Loader2 className="mx-auto animate-spin"/>
+          <Loader2 className="mx-auto animate-spin" />
         ) : !previewUrl ? (
           <ImageUploadSVG className="pointer-events-none mx-auto fill-blue-400" />
         ) : (
@@ -196,5 +196,5 @@ export const FileInput = ({
       </div>
       {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
     </div>
-  )
-}
+  );
+};

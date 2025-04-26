@@ -1,23 +1,23 @@
-"use client"
+"use client";
 
-import { Controller, useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import * as z from "zod"
-import { useAppState } from "@/store/useAppStore"
-import { Button } from "../global/Button"
-import { X } from "lucide-react"
-import { FileInput, Input } from "@/components/global/Input"
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { useAppState } from "@/store/useAppStore";
+import { Button } from "../global/Button";
+import { X } from "lucide-react";
+import { FileInput, Input } from "@/components/global/Input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { useCollectionActions } from "@/hooks/useCollectionHooks"
-import { auth } from "@/config/firebase"
-import { toast } from "sonner"
-import { useCloudinaryUpload } from "@/hooks/useCloudinary"
+} from "@/components/ui/select";
+import { useCollectionActions } from "@/hooks/useCollectionHooks";
+import { auth } from "@/config/firebase";
+import { toast } from "sonner";
+import { useCloudinaryUpload } from "@/hooks/useCloudinary";
 
 const schema = z.object({
   name: z.string().min(3, "Collection name must be at least 3 characters"),
@@ -31,16 +31,16 @@ const schema = z.object({
     .refine((file) => file.size <= 5 * 1024 * 1024, "Max file size is 5MB")
     .refine(
       (file) => file.type.startsWith("image/"),
-      "Only image files allowed"
+      "Only image files allowed",
     ),
-})
+});
 
-type FormData = z.infer<typeof schema>
+type FormData = z.infer<typeof schema>;
 
 const AddCollectionModal = () => {
-  const { addCollection, loading } = useCollectionActions()
-  const { updateModal } = useAppState()
-  const { loading: uploading, upload, error } = useCloudinaryUpload()
+  const { addCollection, loading } = useCollectionActions();
+  const { updateModal } = useAppState();
+  const { loading: uploading, upload, error } = useCloudinaryUpload();
   const {
     register,
     handleSubmit,
@@ -51,35 +51,35 @@ const AddCollectionModal = () => {
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     mode: "onChange",
-  })
+  });
 
   const onSubmit = async (data: FormData) => {
     const formattedTags = data.tags
       ? data.tags.split(",").map((tag) => tag.trim())
-      : []
+      : [];
 
-    const uid = auth.currentUser?.uid
+    const uid = auth.currentUser?.uid;
     if (!uid) {
-      toast.error("Not authenticated")
-      return
+      toast.error("Not authenticated");
+      return;
     }
 
     // Generate collectionId early
-    const collectionId = crypto.randomUUID()
+    const collectionId = crypto.randomUUID();
 
-    let imageUrl = ""
+    let imageUrl = "";
 
     if (data.image) {
-      const publicId = `collections/${uid}-${collectionId}`
-      const result = await upload(data.image, publicId)
+      const publicId = `collections/${uid}-${collectionId}`;
+      const result = await upload(data.image, publicId);
 
       if (!result || error) {
-        toast.error("Image upload failed")
-        return
+        toast.error("Image upload failed");
+        return;
       }
 
-      imageUrl = result
-      console.log(imageUrl)
+      imageUrl = result;
+      console.log(imageUrl);
     }
 
     const params = {
@@ -90,19 +90,19 @@ const AddCollectionModal = () => {
       visibility: data.visibility,
       tags: formattedTags,
       imageUrl,
-    }
+    };
 
     try {
-      await addCollection(params)
-      toast.success("Collection created")
+      await addCollection(params);
+      toast.success("Collection created");
     } catch (err) {
-      console.error("Firestore error:", err)
-      toast.error("Failed to create collection")
+      console.error("Firestore error:", err);
+      toast.error("Failed to create collection");
     }
-  }
+  };
 
   // Watch the visibility to manually update it
-  const visibility = watch("visibility")
+  const visibility = watch("visibility");
 
   return (
     <div className="w-[calc(100vw-48px)] max-w-sm rounded-lg bg-white p-6 shadow-lg md:max-w-md">
@@ -196,7 +196,7 @@ const AddCollectionModal = () => {
         </Button>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default AddCollectionModal
+export default AddCollectionModal;

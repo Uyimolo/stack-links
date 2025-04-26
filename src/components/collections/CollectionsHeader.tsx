@@ -1,14 +1,14 @@
-"use client"
-import { useAppState } from "@/store/useAppStore"
-import DropdownSearch from "../dashboard/Searchbar"
-import { Button } from "../global/Button"
-import { Plus } from "lucide-react"
-import { H1, Paragraph } from "../global/Text"
-import collectionImage from "@/assets/svgs/Collection-pana.svg"
-import Image from "next/image"
+"use client";
+import { useAppState } from "@/store/useAppStore";
+import DropdownSearch from "../dashboard/Searchbar";
+import { Button } from "../global/Button";
+import { Plus } from "lucide-react";
+import { H1, Paragraph } from "../global/Text";
+import collectionImage from "@/assets/svgs/Collection-pana.svg";
+import Image from "next/image";
 
 const CollectionsHeader = () => {
-  const { updateModal } = useAppState()
+  const { updateModal } = useAppState();
 
   return (
     <div className="space-y-4">
@@ -16,7 +16,7 @@ const CollectionsHeader = () => {
         <div className="space-y-4 lg:w-1/2">
           <H1 className="font-semibold text-white md:font-bold">
             {" "}
-            Your Collection
+            Your Collections
           </H1>
           <Paragraph className="text-grey-5 max-w-lg lg:text-base">
             Manage your collections below. Add, edit, or remove links — then
@@ -45,7 +45,7 @@ const CollectionsHeader = () => {
         </Button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CollectionsHeader
+export default CollectionsHeader;

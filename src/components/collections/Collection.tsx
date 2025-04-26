@@ -1,37 +1,41 @@
-"use client"
+"use client";
 
-import { auth } from "@/config/firebase"
-import { useLinks } from "@/hooks/useLinkHooks"
-import { useAppState } from "@/store/useAppStore"
-import { useSingleCollection } from "@/hooks/useCollectionHooks"
-import LinkCard from "../links/LinkCard"
-import Empty from "../global/Empty"
-import CollectionMockup from "./CollectionMockup"
-import Loading from "../global/Loading"
-import { LinkType } from "@/types/types"
-import CollectionHeader from "./CollectionHeader"
-import { Eye } from "lucide-react"
+import { auth } from "@/config/firebase";
+import { useLinks } from "@/hooks/useLinkHooks";
+import { useAppState } from "@/store/useAppStore";
+import { useSingleCollection } from "@/hooks/useCollectionHooks";
+import LinkCard from "../links/LinkCard";
+import Empty from "../global/Empty";
+import CollectionMockup from "./CollectionMockup";
+import Loading from "../global/Loading";
+import { LinkType } from "@/types/types";
+import CollectionHeader from "./CollectionHeader";
+import { Eye } from "lucide-react";
 // import { useLinkStore } from "@/store/useLinkStore"
 
 const Collection = ({ collectionId }: { collectionId: string }) => {
-  const userId = auth.currentUser?.uid || ""
-  const { links } = useLinks(userId, collectionId)
-  const { updateModal } = useAppState()
-  const { collection } = useSingleCollection(userId, collectionId)
-  const name = collection?.name || "Collection Loading..."
+  const userId = auth.currentUser?.uid || "";
+  const { links } = useLinks(userId, collectionId);
+  const { updateModal } = useAppState();
+  const { collection } = useSingleCollection(userId, collectionId);
+  const name = collection?.name || "Collection Loading...";
 
   const openAddLinkModal = () => {
     updateModal({
       status: "open",
       modalType: "add link",
       modalProps: { collectionId },
-    })
-  }
+    });
+  };
 
   return (
     <div className="flex items-start">
       <div className="w-full">
-        <CollectionHeader name={name} collectionId={collectionId} />
+        <CollectionHeader
+          name={name}
+          collectionId={collectionId}
+          imageUrl={collection?.imageUrl}
+        />
 
         <div className="items-start gap-6 p-4 xl:flex">
           <div className="w-full space-y-4">
@@ -75,7 +79,7 @@ const Collection = ({ collectionId }: { collectionId: string }) => {
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Collection
+export default Collection;

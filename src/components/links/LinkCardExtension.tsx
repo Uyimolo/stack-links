@@ -1,21 +1,21 @@
-import { LinkType } from "@/types/types"
-import DeleteLink from "./DeleteLink"
-import { Paragraph } from "../global/Text"
-import { X } from "lucide-react"
-import TooltipComponent from "../global/TooltipComponent"
-import { useAppState } from "@/store/useAppStore"
-import { useEffect, useRef } from "react"
-import { AnimatePresence, motion } from "motion/react"
-import UploadLinkImage from "./UploadLinkImage"
-import LinkTags from "./LinkTags"
+import { LinkType } from "@/types/types";
+import DeleteLink from "./DeleteLink";
+import { Paragraph } from "../global/Text";
+import { X } from "lucide-react";
+import TooltipComponent from "../global/TooltipComponent";
+import { useAppState } from "@/store/useAppStore";
+import { useEffect, useRef } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import UploadLinkImage from "./UploadLinkImage";
+import LinkTags from "./LinkTags";
 
 const LinkCardExtension = ({ link }: { link: LinkType }) => {
-  const containerRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const {
     linkCardExtensionState: { extendedComponentVariant, linkId },
     closeLinkCardExtension,
-  } = useAppState()
+  } = useAppState();
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -23,18 +23,18 @@ const LinkCardExtension = ({ link }: { link: LinkType }) => {
         containerRef.current &&
         !containerRef.current.contains(e.target as Node)
       ) {
-        closeLinkCardExtension()
+        closeLinkCardExtension();
       }
-    }
+    };
 
     if (extendedComponentVariant) {
-      document.addEventListener("mousedown", handleClickOutside)
+      document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [extendedComponentVariant, closeLinkCardExtension])
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [extendedComponentVariant, closeLinkCardExtension]);
 
   const Header = () => (
     <div className="bg-grey-3 relative p-2">
@@ -47,7 +47,7 @@ const LinkCardExtension = ({ link }: { link: LinkType }) => {
         className="absolute top-1/2 right-4 -translate-y-1/2"
       />
     </div>
-  )
+  );
 
   const renderExtendedComponent = () => {
     switch (extendedComponentVariant) {
@@ -57,33 +57,33 @@ const LinkCardExtension = ({ link }: { link: LinkType }) => {
             <Header />
             <DeleteLink link={link} />
           </>
-        )
+        );
       case "share link":
         return (
           <>
             <Header />
           </>
-        )
+        );
       case "upload link image":
         return (
           <>
             <Header />
             <UploadLinkImage link={link} />
           </>
-        )
+        );
       case "view tags":
         return (
           <>
             <Header />
             <LinkTags link={link} />
           </>
-        )
+        );
       default:
-        return null
+        return null;
     }
-  }
+  };
 
-  const shouldRender = extendedComponentVariant !== null && link.id === linkId
+  const shouldRender = extendedComponentVariant !== null && link.id === linkId;
 
   return (
     <AnimatePresence>
@@ -101,7 +101,7 @@ const LinkCardExtension = ({ link }: { link: LinkType }) => {
         </motion.div>
       )}
     </AnimatePresence>
-  )
-}
+  );
+};
 
-export default LinkCardExtension
+export default LinkCardExtension;

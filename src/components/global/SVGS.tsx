@@ -17,5 +17,5 @@ export const ImageUploadSVG = ({ className }: { className?: string }) => {
         // fill="#1474e1"
       />
     </svg>
-  )
-}
+  );
+};

@@ -1,6 +1,5 @@
 // export const useLinkCardExtension = () => {
-//     const [extendedComponent, setExtendedComponent] = 
-
+//     const [extendedComponent, setExtendedComponent] =
 
 //     return {}
 // }

@@ -1,31 +1,31 @@
-import { X } from "lucide-react"
-import React from "react"
-import { Button } from "../global/Button"
-import { auth } from "@/config/firebase"
-import { useAppState } from "@/store/useAppStore"
-import { LinkType } from "@/types/types"
-import { useLinkActions, useLinks } from "@/hooks/useLinkHooks"
+import { X } from "lucide-react";
+import React from "react";
+import { Button } from "../global/Button";
+import { auth } from "@/config/firebase";
+import { useAppState } from "@/store/useAppStore";
+import { LinkType } from "@/types/types";
+import { useLinkActions, useLinks } from "@/hooks/useLinkHooks";
 
 const DeleteLinkModal = ({ link }: { link: LinkType }) => {
-  const { id, collectionId, title } = link
-  const userId = auth.currentUser?.uid || ""
-  const { loading } = useLinks(userId, collectionId)
-  const { removeLink } = useLinkActions()
-  const { updateModal } = useAppState()
+  const { id, collectionId, title } = link;
+  const userId = auth.currentUser?.uid || "";
+  const { loading } = useLinks(userId, collectionId);
+  const { removeLink } = useLinkActions();
+  const { updateModal } = useAppState();
 
   const handleDelete = async () => {
     try {
-      await removeLink(id)
-      closeModal()
+      await removeLink(id);
+      closeModal();
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }
+  };
 
   const closeModal = () => {
-    updateModal({ status: "close", modalType: null })
+    updateModal({ status: "close", modalType: null });
     // Close the modal
-  }
+  };
   return (
     <div className="w-[calc(100vw-48px)] max-w-sm rounded-lg bg-white p-6 shadow-lg md:max-w-md">
       {/* Modal Header */}
@@ -56,7 +56,7 @@ const DeleteLinkModal = ({ link }: { link: LinkType }) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default DeleteLinkModal
+export default DeleteLinkModal;

@@ -1,5 +1,5 @@
-import { create } from "zustand"
-import { CollectionType, LinkType } from "@/types/types"
+import { create } from "zustand";
+import { CollectionType, LinkType } from "@/types/types";
 import {
   getCollections,
   getCollectionById,
@@ -12,73 +12,72 @@ import {
   deleteLink,
   searchCollections,
   searchLinks,
-} from "@/services/linkServices"
-import { Timestamp } from "firebase/firestore"
+} from "@/services/linkServices";
 
 interface LinkStoreState {
-  collections: CollectionType[] | undefined
-  links: LinkType[] | undefined
-  loading: boolean
-  error: string | null
+  collections: CollectionType[] | undefined;
+  links: LinkType[] | undefined;
+  loading: boolean;
+  error: string | null;
 
-  fetchCollections: (userId: string) => Promise<void>
-  fetchCollectionById: (collectionId: string) => Promise<CollectionType | null>
+  fetchCollections: (userId: string) => Promise<void>;
+  fetchCollectionById: (collectionId: string) => Promise<CollectionType | null>;
   addCollection: (params: {
-    userId: string
-    name: string
-    description: string
-    visibility: "public" | "private" | "unlisted"
-    tags?: string[]
-    imageUrl?: string
-    collectionId: string
-  }) => Promise<void>
+    userId: string;
+    name: string;
+    description: string;
+    visibility: "public" | "private" | "unlisted";
+    tags?: string[];
+    imageUrl?: string;
+    collectionId: string;
+  }) => Promise<void>;
   editCollection: (params: {
-    collectionId: string
-    name: string
-    description: string
-    visibility: "public" | "private" | "unlisted"
-    tags: string[]
-    imageUrl?: string
-  }) => Promise<void>
-  removeCollection: (collectionId: string) => Promise<void>
+    collectionId: string;
+    name: string;
+    description: string;
+    visibility: "public" | "private" | "unlisted";
+    tags: string[];
+    imageUrl?: string;
+  }) => Promise<void>;
+  removeCollection: (collectionId: string) => Promise<void>;
 
   fetchLinks: (params: {
-    userId: string
-    collectionId: string
-  }) => Promise<void>
+    userId: string;
+    collectionId: string;
+  }) => Promise<void>;
   addLink: (params: {
-    linkId: string
-    userId: string
-    collectionId: string
-    title: string
-    url: string
-    description?: string
-    imageUrl?: string | undefined
-    visibility?: "public" | "private" | "unlisted"
-    tags?: string[]
-    pinned?: boolean
-  }) => Promise<void>
+    linkId: string;
+    userId: string;
+    collectionId: string;
+    title: string;
+    url: string;
+    description?: string;
+    imageUrl?: string | undefined;
+    visibility?: "public" | "private" | "unlisted";
+    tags?: string[];
+    pinned?: boolean;
+  }) => Promise<void>;
   editLink: (params: {
-    linkId: string
-    title?: string
-    url?: string
-    description?: string
-    imageUrl?: string
-    visibility?: "public" | "private" | "unlisted"
-    pinned?: boolean
-    tags?: string[]
-  }) => Promise<void>
-  removeLink: (linkId: string) => Promise<void>
+    linkId: string;
+    title?: string;
+    url?: string;
+    description?: string;
+    imageUrl?: string;
+    visibility?: "public" | "private" | "unlisted";
+    pinned?: boolean;
+    tags?: string[];
+  }) => Promise<void>;
+  removeLink: (linkId: string) => Promise<void>;
 
   searchForCollections: (params: {
-    userId: string
-    searchTerm: string
-  }) => Promise<void>
+    userId: string;
+    searchTerm: string;
+  }) => Promise<void>;
   searchForLinks: (params: {
-    userId: string
-    collectionId: string
-    searchTerm: string
-  }) => Promise<void>
+    userId: string;
+    collectionId: string;
+    searchTerm: string;
+  }) => Promise<void>;
 }
 
 export const useLinkStore = create<LinkStoreState>((set) => ({
@@ -92,32 +91,32 @@ export const useLinkStore = create<LinkStoreState>((set) => ({
   // ==============================
 
   fetchCollections: async (userId) => {
-    set({ loading: true, error: null })
+    set({ loading: true, error: null });
     try {
-      const collections = await getCollections(userId)
-      set({ collections })
+      const collections = await getCollections(userId);
+      set({ collections });
     } catch (error) {
       set({
         error:
           error instanceof Error ? error.message : "Failed to fetch collection",
-      })
+      });
     } finally {
-      set({ loading: false })
+      set({ loading: false });
     }
   },
 
   fetchCollectionById: async (collectionId) => {
-    set({ loading: true, error: null })
+    set({ loading: true, error: null });
     try {
-      return await getCollectionById(collectionId)
+      return await getCollectionById(collectionId);
     } catch (error) {
       set({
         error:
           error instanceof Error ? error.message : "Failed to fetch collection",
-      })
-      return null
+      });
+      return null;
     } finally {
-      set({ loading: false })
+      set({ loading: false });
     }
   },
 
@@ -130,7 +129,7 @@ export const useLinkStore = create<LinkStoreState>((set) => ({
     imageUrl = "",
     collectionId,
   }) => {
-    set({ loading: true, error: null })
+    set({ loading: true, error: null });
     try {
       await createCollection({
         collectionId,
@@ -140,15 +139,15 @@ export const useLinkStore = create<LinkStoreState>((set) => ({
         visibility,
         tags,
         imageUrl,
-      })
-      await useLinkStore.getState().fetchCollections(userId) // Refresh list
+      });
+      await useLinkStore.getState().fetchCollections(userId); // Refresh list
     } catch (error) {
       set({
         error:
           error instanceof Error ? error.message : "Failed to fetch collection",
-      })
+      });
     } finally {
-      set({ loading: false })
+      set({ loading: false });
     }
   },
 
@@ -160,7 +159,7 @@ export const useLinkStore = create<LinkStoreState>((set) => ({
     tags,
     imageUrl,
   }) => {
-    set({ loading: true, error: null })
+    set({ loading: true, error: null });
     try {
       await updateCollection({
         collectionId,
@@ -169,45 +168,44 @@ export const useLinkStore = create<LinkStoreState>((set) => ({
         visibility,
         tags,
         imageUrl,
-      })
+      });
       set((state) => ({
         collections: (state.collections ?? []).map((col) =>
           col.id === collectionId
-            ? { ...col, name, description, visibility, tags }
-            : col
+            ? { ...col, name, description, visibility, tags, imageUrl }
+            : col,
         ),
-      }))
-
+      }));
     } catch (error) {
       set({
         error:
           error instanceof Error
             ? error.message
             : "Failed to update collection",
-      })
+      });
     } finally {
-      set({ loading: false })
+      set({ loading: false });
     }
   },
 
   removeCollection: async (collectionId) => {
-    set({ loading: true, error: null })
+    set({ loading: true, error: null });
     try {
-      await deleteCollection(collectionId)
+      await deleteCollection(collectionId);
       set((state) => ({
         collections: (state.collections ?? []).filter(
-          (col) => col.id !== collectionId
+          (col) => col.id !== collectionId,
         ),
-      }))
+      }));
     } catch (error) {
       set({
         error:
           error instanceof Error
             ? error.message
             : "Failed to delete collection",
-      })
+      });
     } finally {
-      set({ loading: false })
+      set({ loading: false });
     }
   },
 
@@ -216,16 +214,16 @@ export const useLinkStore = create<LinkStoreState>((set) => ({
   // ==============================
 
   fetchLinks: async ({ userId, collectionId }) => {
-    set({ loading: true, error: null })
+    set({ loading: true, error: null });
     try {
-      const links = await getLinksInCollection({ userId, collectionId })
-      set({ links })
+      const links = await getLinksInCollection({ userId, collectionId });
+      set({ links });
     } catch (error) {
       set({
         error: error instanceof Error ? error.message : "Failed to fetch links",
-      })
+      });
     } finally {
-      set({ loading: false })
+      set({ loading: false });
     }
   },
 
@@ -241,7 +239,7 @@ export const useLinkStore = create<LinkStoreState>((set) => ({
     tags = [],
     pinned = false,
   }) => {
-    set({ loading: true, error: null })
+    set({ loading: true, error: null });
     try {
       await createLink({
         linkId,
@@ -254,14 +252,14 @@ export const useLinkStore = create<LinkStoreState>((set) => ({
         visibility,
         tags,
         pinned,
-      })
-      await useLinkStore.getState().fetchLinks({ userId, collectionId }) // Refresh list
+      });
+      await useLinkStore.getState().fetchLinks({ userId, collectionId }); // Refresh list
     } catch (error) {
       set({
         error: error instanceof Error ? error.message : "Failed to create link",
-      })
+      });
     } finally {
-      set({ loading: false })
+      set({ loading: false });
     }
   },
 
@@ -275,7 +273,7 @@ export const useLinkStore = create<LinkStoreState>((set) => ({
     pinned,
     tags,
   }) => {
-    set({ loading: true, error: null })
+    set({ loading: true, error: null });
     try {
       await updateLink({
         linkId,
@@ -286,7 +284,7 @@ export const useLinkStore = create<LinkStoreState>((set) => ({
         visibility,
         pinned,
         tags,
-      })
+      });
 
       set((state) => ({
         links: (state.links ?? []).map((link) =>
@@ -301,31 +299,31 @@ export const useLinkStore = create<LinkStoreState>((set) => ({
                 pinned: pinned ?? link.pinned,
                 tags: tags ?? link.tags,
               }
-            : link
+            : link,
         ),
-      }))
+      }));
     } catch (error) {
       set({
         error: error instanceof Error ? error.message : "Failed to update link",
-      })
+      });
     } finally {
-      set({ loading: false })
+      set({ loading: false });
     }
   },
 
   removeLink: async (linkId) => {
-    set({ loading: true, error: null })
+    set({ loading: true, error: null });
     try {
-      await deleteLink(linkId)
+      await deleteLink(linkId);
       set((state) => ({
         links: (state.links ?? []).filter((link) => link.id !== linkId),
-      }))
+      }));
     } catch (error) {
       set({
         error: error instanceof Error ? error.message : "Failed to delete link",
-      })
+      });
     } finally {
-      set({ loading: false })
+      set({ loading: false });
     }
   },
 
@@ -334,41 +332,41 @@ export const useLinkStore = create<LinkStoreState>((set) => ({
   // ==============================
 
   searchForCollections: async ({ userId, searchTerm }) => {
-    set({ loading: true, error: null })
+    set({ loading: true, error: null });
     try {
       const filteredCollections = await searchCollections({
         userId,
         searchTerm,
-      })
-      set({ collections: filteredCollections })
+      });
+      set({ collections: filteredCollections });
     } catch (error) {
       set({
         error:
           error instanceof Error
             ? error.message
             : "Failed to search collections",
-      })
+      });
     } finally {
-      set({ loading: false })
+      set({ loading: false });
     }
   },
 
   searchForLinks: async ({ userId, collectionId, searchTerm }) => {
-    set({ loading: true, error: null })
+    set({ loading: true, error: null });
     try {
       const filteredLinks = await searchLinks({
         userId,
         collectionId,
         searchTerm,
-      })
-      set({ links: filteredLinks })
+      });
+      set({ links: filteredLinks });
     } catch (error) {
       set({
         error:
           error instanceof Error ? error.message : "Failed to search links",
-      })
+      });
     } finally {
-      set({ loading: false })
+      set({ loading: false });
     }
   },
-}))
+}));

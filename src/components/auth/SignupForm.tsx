@@ -1,16 +1,16 @@
-"use client"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Input } from "@/components/global/Input"
-import { Button } from "../global/Button"
-import Link from "next/link"
-import { LogoSmall } from "../global/Logo"
-import { useFirebaseAuthError } from "@/hooks/useAuthHooks"
-import { toast } from "sonner"
-import { useRouter } from "next/navigation"
-import { useAuthStore } from "@/store/useAuthStore"
-import { FirebaseError } from "firebase/app"
+"use client";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Input } from "@/components/global/Input";
+import { Button } from "../global/Button";
+import Link from "next/link";
+import { LogoSmall } from "../global/Logo";
+import { useFirebaseAuthError } from "@/hooks/useAuthHooks";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/useAuthStore";
+import { FirebaseError } from "firebase/app";
 
 const schema = z.object({
   email: z.string().email("Invalid email address"),
@@ -23,25 +23,24 @@ const schema = z.object({
     .regex(/[0-9]/, "Password must include at least one number")
     .regex(
       /[@$!%*?&#|]/,
-      "Password must include at least one special character (@$!%*?&)"
+      "Password must include at least one special character (@$!%*?&)",
     ),
 
   // confirmPassword: z
   //   .string()
   //   .min(8, "Password must be at least 8 characters"),
   // username: z.string().min(3, "Username must be at least 3 characters"),
-})
+});
 //   .refine((data) => data.password === data.confirmPassword, {
 //     message: "Passwords do not match",
 //     path: ["confirmPassword"], // This ensures the error appears under confirmPassword
 //   })
 
-type FormValues = z.infer<typeof schema>
+type FormValues = z.infer<typeof schema>;
 const SignupForm = () => {
-  const router = useRouter() // Initialize router
-  const { registerUser } = useAuthStore()
-      const { handleFirebaseAuthError } = useFirebaseAuthError()
-
+  const router = useRouter(); // Initialize router
+  const { registerUser } = useAuthStore();
+  const { handleFirebaseAuthError } = useFirebaseAuthError();
 
   const {
     register,
@@ -50,7 +49,7 @@ const SignupForm = () => {
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
     mode: "onChange",
-  })
+  });
 
   const formData: Record<
     keyof FormValues,
@@ -72,19 +71,19 @@ const SignupForm = () => {
     //   type: "password",
     //   placeholder: "Confirm your password",
     // },
-  }
+  };
 
   const onSubmit = async (data: FormValues) => {
     try {
-      await registerUser(data.email, data.password)
-      toast.success("Account created successfully!")
+      await registerUser(data.email, data.password);
+      toast.success("Account created successfully!");
       //redirect to verify email page
-      router.push("/verify-email")
+      router.push("/verify-email");
     } catch (error) {
-      console.error(error)
-      handleFirebaseAuthError(error as FirebaseError)
+      console.error(error);
+      handleFirebaseAuthError(error as FirebaseError);
     }
-  }
+  };
 
   return (
     <form
@@ -132,7 +131,7 @@ const SignupForm = () => {
         </Link>
       </p>
     </form>
-  )
-}
+  );
+};
 
-export default SignupForm
+export default SignupForm;

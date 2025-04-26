@@ -1,66 +1,65 @@
-import React, { useState } from "react"
-import { Paragraph } from "../global/Text"
-import { Button } from "../global/Button"
-import { Loader2, Minus, Plus } from "lucide-react"
-import { useLinkActions } from "@/hooks/useLinkHooks"
-import { LinkType } from "@/types/types"
-import { toast } from "sonner"
+import React, { useState } from "react";
+import { Paragraph } from "../global/Text";
+import { Button } from "../global/Button";
+import { Loader2, Minus, Plus } from "lucide-react";
+import { useLinkActions } from "@/hooks/useLinkHooks";
+import { LinkType } from "@/types/types";
+import { toast } from "sonner";
 
-const MAX_TAG_LENGTH = 30
-const MAX_TAGS = 10
+const MAX_TAG_LENGTH = 30;
+const MAX_TAGS = 10;
 
 const LinkTags = ({ link }: { link: LinkType }) => {
-  const { id, tags = [] } = link
-  const { editLink, loading } = useLinkActions()
-  const [showInput, setShowInput] = useState(false)
-  const [newTag, setNewTag] = useState("")
+  const { id, tags = [] } = link;
+  const { editLink, loading } = useLinkActions();
+  const [showInput, setShowInput] = useState(false);
+  const [newTag, setNewTag] = useState("");
 
   const updateTags = async (newTags: string[]) => {
     try {
-      await editLink({ linkId: id, tags: newTags })
-      setShowInput(false)
+      await editLink({ linkId: id, tags: newTags });
+      setShowInput(false);
     } catch (error) {
-      toast.error("Something went wrong")
-      console.error(error)
-      setShowInput(false)
+      toast.error("Something went wrong");
+      console.error(error);
+      setShowInput(false);
     }
-  }
+  };
 
   const removeTag = async (clickedTag: string) => {
-    const updated = tags.filter((tag) => tag !== clickedTag)
-    await updateTags(updated)
-  }
+    const updated = tags.filter((tag) => tag !== clickedTag);
+    await updateTags(updated);
+  };
 
   const addTag = async () => {
-    const trimmed = newTag.trim()
-    if (!trimmed) return
+    const trimmed = newTag.trim();
+    if (!trimmed) return;
     if (trimmed.length > MAX_TAG_LENGTH) {
-      toast.error("Tag too long")
-      return
+      toast.error("Tag too long");
+      return;
     }
     if (tags.includes(trimmed)) {
-      toast.error("Duplicate tag")
-      return
+      toast.error("Duplicate tag");
+      return;
     }
     if (tags.length >= MAX_TAGS) {
-      toast.error("Too many tags")
-      return
+      toast.error("Too many tags");
+      return;
     }
 
-    const updated = [...tags, trimmed]
-    setShowInput(false)
-    await updateTags(updated)
-    setNewTag("")
-
-  }
+    const updated = [...tags, trimmed];
+    setShowInput(false);
+    await updateTags(updated);
+    setNewTag("");
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") addTag()
+    if (e.key === "Enter") addTag();
     if (e.key === "Escape") {
-      setShowInput(false)
-      setNewTag("")
+      setShowInput(false);
+      setNewTag("");
     }
-  }
+  };
 
   return (
     <div className="flex flex-wrap items-center gap-2 p-4">
@@ -74,7 +73,7 @@ const LinkTags = ({ link }: { link: LinkType }) => {
             onClick={() => removeTag(tag)}
             className="hover:bg-red bg-primary absolute -top-1.5 -right-1 grid aspect-square h-4 w-4 cursor-pointer place-content-center rounded-full"
           >
-           {<Minus className="w-3 text-white" />}
+            {<Minus className="w-3 text-white" />}
           </div>
         </div>
       ))}
@@ -106,7 +105,7 @@ const LinkTags = ({ link }: { link: LinkType }) => {
         </Button>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default LinkTags
+export default LinkTags;

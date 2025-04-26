@@ -1,35 +1,38 @@
-"use client"
-import { useAppState } from "@/store/useAppStore"
-import DropdownSearch from "../dashboard/Searchbar"
-import { Button } from "../global/Button"
-import { Plus } from "lucide-react"
-import { H1, Paragraph } from "../global/Text"
-import collectionImage from "@/assets/svgs/Collection-pana.svg"
-import Image from "next/image"
+"use client";
+import { useAppState } from "@/store/useAppStore";
+import DropdownSearch from "../dashboard/Searchbar";
+import { Button } from "../global/Button";
+import { Plus } from "lucide-react";
+import { H1, Paragraph } from "../global/Text";
+import collectionImage from "@/assets/svgs/Collection-pana.svg";
+import Image from "next/image";
 
 const CollectionHeader = ({
   name,
   collectionId,
 }: {
-  name: string
-  collectionId: string
+  name: string;
+  collectionId: string;
+  imageUrl?: string;
 }) => {
-  const { updateModal } = useAppState()
+  const { updateModal } = useAppState();
 
   return (
-    <div className="space-y-4 p-4">
-      <div className="bg-primary relative flex justify-between overflow-hidden rounded-xl p-4 lg:h-40">
-        <div className="space-y-4 lg:w-1/2">
+    <div className=" space-y-4 p-4">
+      <div className="relative flex w-full bg-primary lg:h-40 justify-between overflow-hidden rounded-xl p-4">
+        <div className="space-y-4">
           <H1 className="font-semibold text-white capitalize md:font-bold">
             {name}
           </H1>
-          <Paragraph className="text-grey-5 max-w-lg">
+          <Paragraph className="max-w-sm text-white xl:text-lg">
             Manage your links below. Add, edit, or remove them anytime.
           </Paragraph>
         </div>
 
         <Image
-          className="-top-4 max-w-[100px] lg:absolute lg:right-4 lg:max-w-xs"
+          width={200}
+          height={200}
+          className="-top-4 max-w-[100px] lg:absolute lg:right-4 lg:max-w-none lg:min-w-xs"
           src={collectionImage}
           alt="lady arranging picture frames collection"
         />
@@ -53,7 +56,7 @@ const CollectionHeader = ({
         </Button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CollectionHeader
+export default CollectionHeader;

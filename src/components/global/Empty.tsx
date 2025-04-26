@@ -1,17 +1,17 @@
-import empty from "@/assets/svgs/Empty-amico.svg"
-import Image from "next/image"
-import { Paragraph } from "./Text"
-import { Button } from "./Button"
-import { Plus } from "lucide-react"
+import empty from "@/assets/svgs/Empty-amico.svg";
+import Image from "next/image";
+import { Paragraph } from "./Text";
+import { Button } from "./Button";
+import { Plus } from "lucide-react";
 
 const Empty = ({
   text,
   buttonText,
   buttonOnClick,
 }: {
-  text: string
-  buttonText: string
-  buttonOnClick: () => void
+  text: string;
+  buttonText: string;
+  buttonOnClick: () => void;
 }) => {
   return (
     <div className="space-y-4">
@@ -27,7 +27,7 @@ const Empty = ({
         {buttonText}
       </Button>
     </div>
-  )
-}
+  );
+};
 
-export default Empty
+export default Empty;

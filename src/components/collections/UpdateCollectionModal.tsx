@@ -1,25 +1,25 @@
-"use client"
+"use client";
 
-import { Controller, useForm } from "react-hook-form"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import React, { useState } from "react"
-import { useAppState } from "@/store/useAppStore"
-import { useCollectionActions } from "@/hooks/useCollectionHooks"
-import { CollectionType } from "@/types/types"
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import React, { useState } from "react";
+import { useAppState } from "@/store/useAppStore";
+import { useCollectionActions } from "@/hooks/useCollectionHooks";
+import { CollectionType } from "@/types/types";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { FileInput, Input } from "../global/Input"
-import { Button } from "../global/Button"
-import { X } from "lucide-react"
-import { auth } from "@/config/firebase"
-import { useCloudinaryUpload } from "@/hooks/useCloudinary"
-import { toast } from "sonner"
+} from "@/components/ui/select";
+import { FileInput, Input } from "../global/Input";
+import { Button } from "../global/Button";
+import { X } from "lucide-react";
+import { auth } from "@/config/firebase";
+import { useCloudinaryUpload } from "@/hooks/useCloudinary";
+import { toast } from "sonner";
 
 const schema = z.object({
   name: z
@@ -34,22 +34,22 @@ const schema = z.object({
     .refine((file) => file.size <= 5 * 1024 * 1024, "Max file size is 5MB")
     .refine(
       (file) => file.type.startsWith("image/"),
-      "Only image files allowed"
+      "Only image files allowed",
     )
     .optional(),
-})
+});
 
-type FormData = z.infer<typeof schema>
+type FormData = z.infer<typeof schema>;
 
 const UpdateCollectionModal = ({
   collection,
 }: {
-  collection: CollectionType
+  collection: CollectionType;
 }) => {
-  const { updateModal } = useAppState()
-  const { editCollection, loading } = useCollectionActions()
-  const [error, setError] = useState<string | null>(null)
-  const { upload, error: cloudinaryError } = useCloudinaryUpload()
+  const { updateModal } = useAppState();
+  const { editCollection, loading } = useCollectionActions();
+  const [error, setError] = useState<string | null>(null);
+  const { upload, error: cloudinaryError } = useCloudinaryUpload();
 
   const {
     register,
@@ -67,47 +67,53 @@ const UpdateCollectionModal = ({
       tags: collection.tags?.join(",") || "",
     },
     mode: "onChange",
-  })
+  });
 
   const onSubmit = async (data: FormData) => {
-    setError(null)
+    setError(null);
     try {
       const tagsArray =
         data.tags
           ?.split(",")
           .map((tag) => tag.trim())
-          .filter(Boolean) || []
+          .filter(Boolean) || [];
 
-      let imageUrl = ""
+      const uid = auth.currentUser?.uid;
+      let imageUrl = "";
 
       if (data.image) {
-        const userId = auth.currentUser?.uid || ""
-        const publicId = `collections/${userId}-${collection.id}`
-        const result = await upload(data.image, publicId)
+        // console.log(data.image)
+        const publicId = `collections/${uid}-${collection.id}`;
+        const result = await upload(data.image, publicId);
+
         if (!result || cloudinaryError) {
-          toast.error("Image upload failed")
-          return
+          toast.error("Image upload failed");
+          return;
         }
 
-        imageUrl = result
+        imageUrl = result;
+        console.log(imageUrl);
       }
 
-      await editCollection({
+      const params = {
         collectionId: collection.id,
-        name: data.name ?? "",
-        description: data.description ?? "",
-        visibility: data.visibility ?? "public",
+        userId: uid,
+        name: data.name || collection.name,
+        description: data.description || "",
+        visibility: data.visibility || collection.visibility,
         tags: tagsArray,
-        imageUrl: imageUrl ?? collection.imageUrl,
-      })
-      updateModal({ status: "close", modalType: null })
-    } catch (err) {
-      console.error(err)
-      setError("Failed to update collection. Please try again.")
-    }
-  }
+        imageUrl: imageUrl ? imageUrl : collection.imageUrl, // Use existing image if no new one is uploaded
+      };
 
-  console.log(collection)
+      await editCollection(params);
+      updateModal({ status: "close", modalType: null });
+    } catch (err) {
+      console.error(err);
+      setError("Failed to update collection. Please try again.");
+    }
+  };
+
+  // console.log(collection)
 
   return (
     <div className="w-[calc(100vw-48px)] max-w-sm rounded-lg bg-white p-6 shadow-lg md:max-w-md">
@@ -194,7 +200,7 @@ const UpdateCollectionModal = ({
         </Button>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default UpdateCollectionModal
+export default UpdateCollectionModal;

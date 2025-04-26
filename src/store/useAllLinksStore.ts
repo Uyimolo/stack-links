@@ -1,6 +1,6 @@
-import { create } from "zustand"
-import { getAllLinks } from "@/services/linkServices"
-import { LinkType } from "@/types/types"
+import { create } from "zustand";
+import { getAllLinks } from "@/services/linkServices";
+import { LinkType } from "@/types/types";
 
 // ===========================================================================
 // firebase spark plan doesnt allow for proper search or intergration with indexing extentions like algolia, so this implementation fetches all links on mount and provides methods to update the list of all links when crud operations are made else where in the app to keep the data fresh
@@ -10,16 +10,16 @@ import { LinkType } from "@/types/types"
 //Note: to be changed once i can afford better plans
 
 interface AllLinksStoreState {
-  allLinks: LinkType[]
-  loading: boolean
-  error: string | null
-  hasFetched: boolean
+  allLinks: LinkType[];
+  loading: boolean;
+  error: string | null;
+  hasFetched: boolean;
 
-  fetchAllLinks: (userId: string) => Promise<void>
-  addLink: (link: LinkType) => void
-  removeLink: (link: LinkType) => void
-  updateLink: (link: LinkType) => void
-  clearAllLinks: () => void
+  fetchAllLinks: (userId: string) => Promise<void>;
+  addLink: (link: LinkType) => void;
+  removeLink: (link: LinkType) => void;
+  updateLink: (link: LinkType) => void;
+  clearAllLinks: () => void;
 }
 
 export const useAllLinkStore = create<AllLinksStoreState>((set, get) => ({
@@ -30,19 +30,19 @@ export const useAllLinkStore = create<AllLinksStoreState>((set, get) => ({
 
   // Fetch all links for the user once
   fetchAllLinks: async (userId: string) => {
-    const { hasFetched } = get()
-    if (hasFetched) return
+    const { hasFetched } = get();
+    if (hasFetched) return;
 
-    set({ loading: true, error: null })
+    set({ loading: true, error: null });
     try {
-      const allLinks = await getAllLinks(userId)
-      set({ allLinks, hasFetched: true })
+      const allLinks = await getAllLinks(userId);
+      set({ allLinks, hasFetched: true });
     } catch (error) {
       set({
         error: (error as Error).message || "Failed to fetch links",
-      })
+      });
     } finally {
-      set({ loading: false })
+      set({ loading: false });
     }
   },
 
@@ -57,11 +57,11 @@ export const useAllLinkStore = create<AllLinksStoreState>((set, get) => ({
   updateLink: (updatedLink: LinkType) =>
     set((state) => ({
       allLinks: state.allLinks.map((link) =>
-        link.id === updatedLink.id ? updatedLink : link
+        link.id === updatedLink.id ? updatedLink : link,
       ),
     })),
 
   // Clear all links (on logout)
   clearAllLinks: () =>
     set({ allLinks: [], hasFetched: false, loading: false, error: null }),
-}))
+}));

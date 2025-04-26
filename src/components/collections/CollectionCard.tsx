@@ -1,27 +1,26 @@
-import { CollectionType } from "@/types/types"
-import Link from "next/link"
-import Tags from "../global/Tags"
-import CollectionCardActions from "./CollectionCardActions"
-import VisibilityBadge from "../global/VisibilityBadge"
-import { H4, Paragraph } from "../global/Text"
+import { CollectionType } from "@/types/types";
+import Link from "next/link";
+import Tags from "../global/Tags";
+import CollectionCardActions from "./CollectionCardActions";
+import VisibilityBadge from "../global/VisibilityBadge";
+import { H4, Paragraph } from "../global/Text";
 
 const CollectionCard = ({ collection }: { collection: CollectionType }) => {
-  const { id, name, description, visibility, imageUrl, tags = [] } = collection
+  const { id, name, description, visibility, imageUrl, tags = [] } = collection;
 
   return (
-    <div className="group border-grey hover:border-grey-3 flex w-full flex-col overflow-hidden rounded-xl  border bg-cover transition-all duration-300 hover:shadow-sm sm:w-[calc(50%-8px)] xl:w-[calc(33%-8px)]">
-      {/* image */}
-      <div
-        className="aspect-square h-30 bg-grey-4 rounded-t-xl bg-cover p-2"
-        style={{ backgroundImage: `url(${imageUrl})` }}
-      >
-        <div className="ml-auto w-fit">
-          <VisibilityBadge visibility={visibility} />
-        </div>
-      </div>
-
+    <div className="group border-grey hover:border-grey-3 group flex w-full flex-col overflow-hidden rounded-xl border bg-cover transition-all duration-300 hover:scale-102 hover:shadow-xl ">
       {/* content */}
       <Link href={`/collections/${id}`} className="space-y-3 p-2">
+        {/* image */}
+        <div
+          className="bg-grey-4 aspect-square h-30 w-full rounded-t-xl bg-cover bg-no-repeat p-2"
+          style={{ backgroundImage: `url(${imageUrl})` }}
+        >
+          <div className="ml-auto w-fit">
+            <VisibilityBadge visibility={visibility} />
+          </div>
+        </div>
         {/* name and actions */}
         <div className="flex w-full items-center justify-between gap-4">
           <H4 className="line-clamp-1 leading-none font-semibold capitalize">
@@ -39,7 +38,7 @@ const CollectionCard = ({ collection }: { collection: CollectionType }) => {
         <Tags tags={tags} />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CollectionCard
+export default CollectionCard;

@@ -1,11 +1,11 @@
-import Collection from "@/components/collections/Collection"
+import Collection from "@/components/collections/Collection";
 
 export default async function CollectionPage({
   params,
 }: {
-  params: Promise<{ collectionId: string }>
+  params: Promise<{ collectionId: string }>;
 }) {
-  const { collectionId } = await params
+  const { collectionId } = await params;
 
-  return <Collection collectionId={collectionId} />
+  return <Collection collectionId={collectionId} />;
 }

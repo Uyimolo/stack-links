@@ -1,6 +1,6 @@
-import Image from "next/image"
-import authLayoutImage from "@/assets/svgs/My-password-pana.svg"
-import { ReactNode } from "react"
+import Image from "next/image";
+import authLayoutImage from "@/assets/svgs/My-password-pana.svg";
+import { ReactNode } from "react";
 
 const AuthLayout = ({ children }: { children: ReactNode }) => {
   return (
@@ -16,7 +16,7 @@ const AuthLayout = ({ children }: { children: ReactNode }) => {
         {children}
       </section>
     </main>
-  )
-}
+  );
+};
 
-export default AuthLayout
+export default AuthLayout;

@@ -1,26 +1,29 @@
-import { create } from "zustand"
+// store/useAppState.ts
+import { create } from "zustand";
 import type {
   ExtentedComponentVariant,
   LinkCardExtensionState,
   ModalState,
-} from "@/types/types" 
+} from "@/types/types";
 
 interface AppState {
-  showSidebar: boolean
-  toggleSidebar: () => void
-  modalState: ModalState
-  updateModal: (newModalState: ModalState) => void
-  closeModal: () => void
-  linkCardExtensionState: LinkCardExtensionState
-  closeLinkCardExtension: () => void
+  showSidebar: boolean;
+  setShowSidebar: (value: boolean) => void;
+  toggleSidebar: () => void;
+  modalState: ModalState;
+  updateModal: (newModalState: ModalState) => void;
+  closeModal: () => void;
+  linkCardExtensionState: LinkCardExtensionState;
+  closeLinkCardExtension: () => void;
   updateLinkCardExtension: (
     variant: ExtentedComponentVariant,
-    id: string | null
-  ) => void
+    id: string | null,
+  ) => void;
 }
 
 export const useAppState = create<AppState>((set) => ({
   showSidebar: false,
+  setShowSidebar: (value) => set({ showSidebar: value }),
   toggleSidebar: () => set((state) => ({ showSidebar: !state.showSidebar })),
   modalState: { status: "close", modalType: null, modalProps: {} },
   updateModal: (modal) => set({ modalState: modal }),
@@ -31,9 +34,8 @@ export const useAppState = create<AppState>((set) => ({
     set({
       linkCardExtensionState: { extendedComponentVariant: null, linkId: null },
     }),
-  updateLinkCardExtension: (variant, id) => {
+  updateLinkCardExtension: (variant, id) =>
     set({
       linkCardExtensionState: { extendedComponentVariant: variant, linkId: id },
-    })
-  },
-}))
+    }),
+}));

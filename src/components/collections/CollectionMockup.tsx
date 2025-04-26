@@ -1,18 +1,18 @@
-import { auth } from "@/config/firebase"
-import { useLinks } from "@/hooks/useLinkHooks"
-import React from "react"
-import { Paragraph } from "../global/Text"
-import { DropdownMenu } from "../ui/dropdown-menu"
+import { auth } from "@/config/firebase";
+import { useLinks } from "@/hooks/useLinkHooks";
+import React from "react";
+import { Paragraph } from "../global/Text";
+import { DropdownMenu } from "../ui/dropdown-menu";
 import {
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "@radix-ui/react-dropdown-menu"
-import { MoreVertical } from "lucide-react"
-import Loading from "../global/Loading"
+} from "@radix-ui/react-dropdown-menu";
+import { MoreVertical } from "lucide-react";
+import Loading from "../global/Loading";
 
 const CollectionMockup = ({ collectionId }: { collectionId: string }) => {
-  const userId = auth.currentUser?.uid || ""
-  const { links } = useLinks(userId, collectionId)
+  const userId = auth.currentUser?.uid || "";
+  const { links } = useLinks(userId, collectionId);
 
   return (
     <div className="border-grey-2 mx-auto flex aspect-[9/18] h-[90vh] max-h-[650px] flex-col space-y-4 rounded-3xl border-4 bg-[#111111] p-2 xl:h-[70vh]">
@@ -52,7 +52,7 @@ const CollectionMockup = ({ collectionId }: { collectionId: string }) => {
           ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CollectionMockup
+export default CollectionMockup;

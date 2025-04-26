@@ -1,10 +1,10 @@
-import React from "react"
-import CollectionMockup from "./CollectionMockup"
-import { X } from "lucide-react"
-import { useAppState } from "@/store/useAppStore"
+import React from "react";
+import CollectionMockup from "./CollectionMockup";
+import { X } from "lucide-react";
+import { useAppState } from "@/store/useAppStore";
 
 const CollectionMockupModal = ({ collectionId }: { collectionId: string }) => {
-  const { updateModal } = useAppState()
+  const { updateModal } = useAppState();
   return (
     <div className="relative grid h-[90vh] w-screen place-content-center">
       <button
@@ -15,7 +15,7 @@ const CollectionMockupModal = ({ collectionId }: { collectionId: string }) => {
       </button>
       <CollectionMockup collectionId={collectionId} />
     </div>
-  )
-}
+  );
+};
 
-export default CollectionMockupModal
+export default CollectionMockupModal;

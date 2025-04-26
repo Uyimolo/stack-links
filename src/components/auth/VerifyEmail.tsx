@@ -1,37 +1,37 @@
-"use client"
+"use client";
 
-import { Button } from "../global/Button"
-import { LogoSmall } from "../global/Logo"
-import { toast } from "sonner"
-import { useRouter } from "next/navigation"
-import { useEffect } from "react"
-import { useAuthStore } from "@/store/useAuthStore"
+import { Button } from "../global/Button";
+import { LogoSmall } from "../global/Logo";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const VerifyEmail = () => {
-  const router = useRouter()
-  const { verifyUserEmail, isVerified, refreshUserState } = useAuthStore()
+  const router = useRouter();
+  const { verifyUserEmail, isVerified, refreshUserState } = useAuthStore();
 
   const handleResend = async () => {
     try {
-      await verifyUserEmail()
-      toast.success("Verification email sent!")
+      await verifyUserEmail();
+      toast.success("Verification email sent!");
     } catch (error) {
-      console.error(error)
-      toast.error("Failed to resend email. Please try again later.")
+      console.error(error);
+      toast.error("Failed to resend email. Please try again later.");
     }
-  }
+  };
 
   useEffect(() => {
     const interval = setInterval(async () => {
-      await refreshUserState()
+      await refreshUserState();
       if (isVerified) {
-        clearInterval(interval)
-        setTimeout(() => router.push("/dashboard"), 2000)
+        clearInterval(interval);
+        setTimeout(() => router.push("/dashboard"), 2000);
       }
-    }, 3000)
+    }, 3000);
 
-    return () => clearInterval(interval)
-  }, [isVerified, refreshUserState, router])
+    return () => clearInterval(interval);
+  }, [isVerified, refreshUserState, router]);
 
   return (
     <div className="mx-auto w-full max-w-[400px] space-y-6 rounded-2xl bg-white p-6 text-center">
@@ -46,7 +46,7 @@ const VerifyEmail = () => {
 
       <Button onClick={handleResend}>Resend Email</Button>
     </div>
-  )
-}
+  );
+};
 
-export default VerifyEmail
+export default VerifyEmail;

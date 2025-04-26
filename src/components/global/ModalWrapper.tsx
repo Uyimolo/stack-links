@@ -1,51 +1,51 @@
-"use client"
+"use client";
 
-import { useEffect } from "react"
-import { useAppState } from "@/store/useAppStore"
-import AddCollectionModal from "../collections/AddCollectionModal"
-import UpdateCollectionModal from "../collections/UpdateCollectionModal"
-import DeleteCollectionModal from "../collections/DeleteCollectionModal"
-import AddLinkModal from "../links/AddLinkModal"
-import DeleteLinkModal from "../links/DeleteLinkModal"
-import { ScrollArea } from "../ui/scroll-area"
-import CollectionMockupModal from "../collections/CollectionMockupModal"
+import { useEffect } from "react";
+import { useAppState } from "@/store/useAppStore";
+import AddCollectionModal from "../collections/AddCollectionModal";
+import UpdateCollectionModal from "../collections/UpdateCollectionModal";
+import DeleteCollectionModal from "../collections/DeleteCollectionModal";
+import AddLinkModal from "../links/AddLinkModal";
+import DeleteLinkModal from "../links/DeleteLinkModal";
+import { ScrollArea } from "../ui/scroll-area";
+import CollectionMockupModal from "../collections/CollectionMockupModal";
 
 function ModalWrapper() {
-  const { modalState, closeModal } = useAppState()
-  const { status, modalType, modalProps } = modalState
+  const { modalState, closeModal } = useAppState();
+  const { status, modalType, modalProps } = modalState;
 
   useEffect(() => {
-    document.body.style.overflow = status === "open" ? "hidden" : "auto"
+    document.body.style.overflow = status === "open" ? "hidden" : "auto";
     return () => {
-      document.body.style.overflow = "auto"
-    }
-  }, [status])
+      document.body.style.overflow = "auto";
+    };
+  }, [status]);
 
-  if (status === "close" || !modalType) return null
+  if (status === "close" || !modalType) return null;
 
   const renderModal = () => {
     switch (modalType) {
       case "add collection":
-        return <AddCollectionModal />
+        return <AddCollectionModal />;
       case "update collection":
-        if (!modalProps?.collection) return null
-        return <UpdateCollectionModal collection={modalProps.collection} />
+        if (!modalProps?.collection) return null;
+        return <UpdateCollectionModal collection={modalProps.collection} />;
       case "delete collection":
-        if (!modalProps?.collectionId) return null
-        return <DeleteCollectionModal collection={modalProps.collection} />
+        if (!modalProps?.collectionId) return null;
+        return <DeleteCollectionModal collection={modalProps.collection} />;
       case "add link":
-        if (!modalProps?.collectionId) return null
-        return <AddLinkModal collectionId={modalProps.collectionId} />
+        if (!modalProps?.collectionId) return null;
+        return <AddLinkModal collectionId={modalProps.collectionId} />;
       case "delete link":
-        if (!modalProps?.link) return null
-        return <DeleteLinkModal link={modalProps.link} />
+        if (!modalProps?.link) return null;
+        return <DeleteLinkModal link={modalProps.link} />;
       case "view mockup":
-        if (!modalProps?.collectionId) return null
-        return <CollectionMockupModal collectionId={modalProps.collectionId} />
+        if (!modalProps?.collectionId) return null;
+        return <CollectionMockupModal collectionId={modalProps.collectionId} />;
       default:
-        return null
+        return null;
     }
-  }
+  };
 
   return (
     <div
@@ -59,7 +59,7 @@ function ModalWrapper() {
         {renderModal()}
       </ScrollArea>
     </div>
-  )
+  );
 }
 
-export default ModalWrapper
+export default ModalWrapper;

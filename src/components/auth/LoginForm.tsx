@@ -1,16 +1,16 @@
-"use client"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Input } from "@/components/global/Input"
-import { Button } from "../global/Button"
-import Link from "next/link"
-import { LogoSmall } from "../global/Logo"
-import { useFirebaseAuthError } from "@/hooks/useAuthHooks"
-import { toast } from "sonner"
-import { useAuthStore } from "@/store/useAuthStore"
-import { FirebaseError } from "firebase/app"
-import { useRouter } from "next/navigation"
+"use client";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Input } from "@/components/global/Input";
+import { Button } from "../global/Button";
+import Link from "next/link";
+import { LogoSmall } from "../global/Logo";
+import { useFirebaseAuthError } from "@/hooks/useAuthHooks";
+import { toast } from "sonner";
+import { useAuthStore } from "@/store/useAuthStore";
+import { FirebaseError } from "firebase/app";
+import { useRouter } from "next/navigation";
 
 const schema = z.object({
   email: z.string().email("Invalid email address"),
@@ -22,17 +22,17 @@ const schema = z.object({
     .regex(/[0-9]/, "Password must include at least one number")
     .regex(
       /[@$!%*?&#|]/,
-      "Password must include at least one special character (@$!%*?&)"
+      "Password must include at least one special character (@$!%*?&)",
     ),
-})
+});
 
-type FormValues = z.infer<typeof schema>
+type FormValues = z.infer<typeof schema>;
 
 const LoginForm = () => {
-  const { handleFirebaseAuthError } = useFirebaseAuthError()
-  const router = useRouter()
+  const { handleFirebaseAuthError } = useFirebaseAuthError();
+  const router = useRouter();
 
-  const { loginUser } = useAuthStore()
+  const { loginUser } = useAuthStore();
   const {
     register,
     handleSubmit,
@@ -40,20 +40,20 @@ const LoginForm = () => {
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
     mode: "onChange",
-  })
+  });
 
   const onSubmit = async (data: FormValues) => {
     try {
-      await loginUser(data.email, data.password)
-      toast.success("Login successful")
-      router.replace("/dashboard")
+      await loginUser(data.email, data.password);
+      toast.success("Login successful");
+      router.replace("/dashboard");
     } catch (error) {
-      console.error(error)
+      console.error(error);
       // Fix: Don't call hooks in event handlers
       // Instead, import the function and call it
-      handleFirebaseAuthError(error as FirebaseError)
+      handleFirebaseAuthError(error as FirebaseError);
     }
-  }
+  };
 
   return (
     <form
@@ -93,7 +93,7 @@ const LoginForm = () => {
       </Button>
       <div className="flex flex-wrap justify-between gap-x-12 gap-y-2">
         <p className="text-sm">
-          {`Don't have an account?`} {" "}
+          {`Don't have an account?`}{" "}
           <Link href="/signup" className="text-primary">
             Sign up
           </Link>
@@ -103,7 +103,7 @@ const LoginForm = () => {
         </Link>
       </div>
     </form>
-  )
-}
+  );
+};
 
-export default LoginForm
+export default LoginForm;

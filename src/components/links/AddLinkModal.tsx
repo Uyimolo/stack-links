@@ -1,16 +1,16 @@
-"use client"
+"use client";
 
-import { Controller, useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import * as z from "zod"
-import { useAppState } from "@/store/useAppStore"
-import { Button } from "../global/Button"
-import { X } from "lucide-react"
-import { FileInput, Input } from "@/components/global/Input"
-import { auth } from "@/config/firebase"
-import { useLinkActions } from "@/hooks/useLinkHooks"
-import { toast } from "sonner"
-import { useCloudinaryUpload } from "@/hooks/useCloudinary"
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { useAppState } from "@/store/useAppStore";
+import { Button } from "../global/Button";
+import { X } from "lucide-react";
+import { FileInput, Input } from "@/components/global/Input";
+import { auth } from "@/config/firebase";
+import { useLinkActions } from "@/hooks/useLinkHooks";
+import { toast } from "sonner";
+import { useCloudinaryUpload } from "@/hooks/useCloudinary";
 
 const schema = z.object({
   url: z.string().url("Please enter a valid URL"),
@@ -25,22 +25,22 @@ const schema = z.object({
     .refine((file) => file.size <= 5 * 1024 * 1024, "Max file size is 5MB")
     .refine(
       (file) => file.type.startsWith("image/"),
-      "Only image files allowed"
+      "Only image files allowed",
     )
     .optional(),
-})
+});
 
-type FormData = z.infer<typeof schema>
+type FormData = z.infer<typeof schema>;
 
 interface Props {
-  collectionId: string
+  collectionId: string;
 }
 
 const AddLinkModal = ({ collectionId }: Props) => {
-  const userId = auth.currentUser?.uid || ""
-  const { upload, loading: uploading, error } = useCloudinaryUpload()
-  const { updateModal } = useAppState()
-  const { addLink, loading } = useLinkActions()
+  const userId = auth.currentUser?.uid || "";
+  const { upload, loading: uploading, error } = useCloudinaryUpload();
+  const { updateModal } = useAppState();
+  const { addLink, loading } = useLinkActions();
 
   const {
     register,
@@ -50,27 +50,27 @@ const AddLinkModal = ({ collectionId }: Props) => {
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     mode: "onChange",
-  })
+  });
 
   const onSubmit = async (data: FormData) => {
     const formattedTags = data.tags
       ? data.tags.split(",").map((tag) => tag.trim())
-      : []
+      : [];
 
-    let imageUrl = ""
-    const linkId = crypto.randomUUID()
+    let imageUrl = "";
+    const linkId = crypto.randomUUID();
 
     if (data.image) {
-      const publicId = `links/${userId}-${linkId}`
-      const result = await upload(data.image, publicId)
+      const publicId = `links/${userId}-${linkId}`;
+      const result = await upload(data.image, publicId);
 
       if (!result || error) {
-        toast.error("Image upload failed")
-        return
+        toast.error("Image upload failed");
+        return;
       }
 
-      imageUrl = result
-      console.log(imageUrl)
+      imageUrl = result;
+      console.log(imageUrl);
     }
 
     const params = {
@@ -82,18 +82,18 @@ const AddLinkModal = ({ collectionId }: Props) => {
       description: data.description || "",
       tags: formattedTags,
       imageUrl,
-    }
+    };
 
     try {
-      await addLink(params)
-      toast.success("Link added successfully!")
-      updateModal({ status: "close", modalType: null })
+      await addLink(params);
+      toast.success("Link added successfully!");
+      updateModal({ status: "close", modalType: null });
     } catch (error) {
-      console.error("Error adding link:", error)
-      toast.error("Error adding link")
-      updateModal({ status: "close", modalType: null })
+      console.error("Error adding link:", error);
+      toast.error("Error adding link");
+      updateModal({ status: "close", modalType: null });
     }
-  }
+  };
 
   return (
     <div className="w-[calc(100vw-48px)] max-w-sm rounded-lg bg-white p-6 shadow-lg md:max-w-md">
@@ -167,7 +167,7 @@ const AddLinkModal = ({ collectionId }: Props) => {
         </Button>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default AddLinkModal
+export default AddLinkModal;

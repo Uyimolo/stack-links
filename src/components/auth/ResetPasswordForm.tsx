@@ -1,17 +1,17 @@
-"use client"
+"use client";
 
-import { useSearchParams } from "next/navigation"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Input } from "@/components/global/Input"
-import { Button } from "../global/Button"
-import { LogoSmall } from "../global/Logo"
-import { confirmPasswordReset } from "firebase/auth"
-import { useState } from "react"
-import { auth } from "@/config/firebase"
-import { useFirebaseAuthError } from "@/hooks/useAuthHooks"
-import { FirebaseError } from "firebase/app"
+import { useSearchParams } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Input } from "@/components/global/Input";
+import { Button } from "../global/Button";
+import { LogoSmall } from "../global/Logo";
+import { confirmPasswordReset } from "firebase/auth";
+import { useState } from "react";
+import { auth } from "@/config/firebase";
+import { useFirebaseAuthError } from "@/hooks/useAuthHooks";
+import { FirebaseError } from "firebase/app";
 
 const schema = z.object({
   password: z
@@ -22,17 +22,17 @@ const schema = z.object({
     .regex(/[0-9]/, "Password must include at least one number")
     .regex(
       /[@$!%*?&]/,
-      "Password must include at least one special character (@$!%*?&)"
+      "Password must include at least one special character (@$!%*?&)",
     ),
-})
+});
 
-type FormValues = z.infer<typeof schema>
+type FormValues = z.infer<typeof schema>;
 
 const ResetPasswordForm = () => {
-  const searchParams = useSearchParams()
-  const oobCode = searchParams.get("oobCode")
-  const [message, setMessage] = useState("")
-  const { handleFirebaseAuthError } = useFirebaseAuthError()
+  const searchParams = useSearchParams();
+  const oobCode = searchParams.get("oobCode");
+  const [message, setMessage] = useState("");
+  const { handleFirebaseAuthError } = useFirebaseAuthError();
 
   const {
     register,
@@ -41,22 +41,22 @@ const ResetPasswordForm = () => {
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
     mode: "onChange",
-  })
+  });
 
   const onSubmit = async (data: FormValues) => {
     if (!oobCode) {
-      setMessage("Invalid or expired reset link.")
-      return
+      setMessage("Invalid or expired reset link.");
+      return;
     }
 
     try {
-      await confirmPasswordReset(auth, oobCode, data.password)
-      setMessage("Password reset successful! You can now log in.")
+      await confirmPasswordReset(auth, oobCode, data.password);
+      setMessage("Password reset successful! You can now log in.");
     } catch (error) {
-      console.error(error)
-      handleFirebaseAuthError(error as FirebaseError)
+      console.error(error);
+      handleFirebaseAuthError(error as FirebaseError);
     }
-  }
+  };
 
   return (
     <form
@@ -93,7 +93,7 @@ const ResetPasswordForm = () => {
         Reset Password
       </Button>
     </form>
-  )
-}
+  );
+};
 
-export default ResetPasswordForm
+export default ResetPasswordForm;

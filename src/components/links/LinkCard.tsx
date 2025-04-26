@@ -1,28 +1,28 @@
-import { GripVertical } from "lucide-react"
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useLinkActions } from "@/hooks/useLinkHooks"
-import { LinkType } from "@/types/types"
-import EditableField from "./EditableField"
-import LinkActions from "./LinkActions"
-import { toast } from "sonner"
-import VisibilityToggle from "./VisibilityToggle"
-import LinkCardExtension from "./LinkCardExtension"
+import { GripVertical } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useLinkActions } from "@/hooks/useLinkHooks";
+import { LinkType } from "@/types/types";
+import EditableField from "./EditableField";
+import LinkActions from "./LinkActions";
+import { toast } from "sonner";
+import VisibilityToggle from "./VisibilityToggle";
+import LinkCardExtension from "./LinkCardExtension";
 
 const schema = z.object({
   url: z.string().url("Please enter a valid URL"),
   title: z.string().min(2, "Title must be at least 2 characters"),
   description: z.string().optional(),
-})
+});
 
-type FormData = z.infer<typeof schema>
+type FormData = z.infer<typeof schema>;
 
 const LinkCard = ({ link }: { link: LinkType }) => {
-  const { id, title, url, description } = link
-  const { editLink } = useLinkActions()
-  const [editField, setEditField] = useState<keyof FormData | null>(null)
+  const { id, title, url, description } = link;
+  const { editLink } = useLinkActions();
+  const [editField, setEditField] = useState<keyof FormData | null>(null);
 
   const {
     register,
@@ -33,36 +33,37 @@ const LinkCard = ({ link }: { link: LinkType }) => {
     mode: "onBlur",
     resolver: zodResolver(schema),
     defaultValues: { title, url, description },
-  })
+  });
 
   const handleSave = async (field: keyof FormData) => {
-    const isValid = await trigger(field)
+    const isValid = await trigger(field);
 
     if (!isValid) {
       if (errors[field]?.message) {
-        toast.error(errors[field]?.message as string)
+        toast.error(errors[field]?.message as string);
       }
-      return
+      return;
     }
 
-    const values = watch()
+    const values = watch();
 
-    const update: Partial<FormData> & { linkId: string } = { linkId: id }
+    const update: Partial<FormData> & { linkId: string } = { linkId: id };
 
-    if (field === "title" && values.title !== title) update.title = values.title
-    if (field === "url" && values.url !== url) update.url = values.url
+    if (field === "title" && values.title !== title)
+      update.title = values.title;
+    if (field === "url" && values.url !== url) update.url = values.url;
     if (field === "description" && values.description !== description)
-      update.description = values.description
+      update.description = values.description;
 
     if (Object.keys(update).length > 1) {
-      await editLink(update)
-      toast.success("Saved successfully")
+      await editLink(update);
+      toast.success("Saved successfully");
     }
 
-    setEditField(null)
-  }
+    setEditField(null);
+  };
 
-  const values = watch()
+  const values = watch();
 
   return (
     <div className="hover:bg-grey-6 border-grey-3/40 overflow-hidden rounded-xl border bg-white shadow transition duration-300">
@@ -119,7 +120,7 @@ const LinkCard = ({ link }: { link: LinkType }) => {
       </div>
       <LinkCardExtension link={link} />
     </div>
-  )
-}
+  );
+};
 
-export default LinkCard
+export default LinkCard;

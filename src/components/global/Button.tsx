@@ -1,7 +1,7 @@
-import { cn } from "@/lib/cn"
-import { ButtonHTMLAttributes } from "react"
-import { Loader2 } from "lucide-react"
-import { cva, type VariantProps } from "class-variance-authority"
+import { cn } from "@/lib/cn";
+import { ButtonHTMLAttributes } from "react";
+import { Loader2 } from "lucide-react";
+import { cva, type VariantProps } from "class-variance-authority";
 
 const buttonVariants = cva(
   "flex items-center justify-center gap-2 rounded-lg font-medium transition-all disabled:cursor-not-allowed",
@@ -10,7 +10,8 @@ const buttonVariants = cva(
       variant: {
         primary: "bg-btn-primary text-white hover:bg-btn-primary-hover",
         secondary: "bg-gray-100 text-gray-800 hover:bg-gray-200",
-        outline: "border border-primary text-primary bg-white hover:bg-gray-100",
+        outline:
+          "border border-primary text-primary bg-white hover:bg-gray-100",
         destructive: "bg-red-600 text-white hover:bg-red-700",
         ghost: "text-gray-700 hover:bg-gray-100",
       },
@@ -24,13 +25,13 @@ const buttonVariants = cva(
       variant: "primary",
       size: "md",
     },
-  }
-)
+  },
+);
 
 interface ButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
-  loading?: boolean
+  loading?: boolean;
 }
 
 export function Button({
@@ -50,5 +51,5 @@ export function Button({
       {loading && <Loader2 className="h-5 w-5 animate-spin" />}
       {children}
     </button>
-  )
+  );
 }

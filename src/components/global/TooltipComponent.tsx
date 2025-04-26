@@ -3,13 +3,13 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
-import { cn } from "@/lib/cn"
+} from "@/components/ui/tooltip";
+import { cn } from "@/lib/cn";
 
 interface TooltipComponentProps {
-  trigger: React.ReactNode
-  content: string
-  className?: string
+  trigger: React.ReactNode;
+  content: string;
+  className?: string;
 }
 
 const TooltipComponent = ({
@@ -23,7 +23,7 @@ const TooltipComponent = ({
         <TooltipTrigger
           className={cn(
             "grid h-6 px-1 place-content-center rounded hover:bg-[#f1f1f1]",
-            className
+            className,
           )}
         >
           {trigger}
@@ -33,7 +33,7 @@ const TooltipComponent = ({
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
-  )
-}
+  );
+};
 
-export default TooltipComponent
+export default TooltipComponent;

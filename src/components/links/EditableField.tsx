@@ -1,24 +1,24 @@
-import { UseFormRegister } from "react-hook-form"
-import { Input } from "@/components/global/Input"
-import { Edit3 } from "lucide-react"
-import TooltipComponent from "../global/TooltipComponent"
-import { Paragraph } from "../global/Text"
+import { UseFormRegister } from "react-hook-form";
+import { Input } from "@/components/global/Input";
+import { Edit3 } from "lucide-react";
+import TooltipComponent from "../global/TooltipComponent";
+import { Paragraph } from "../global/Text";
 
 type EditableFieldProps = {
-  field: "title" | "url" | "description"
-  value: string | undefined
-  isEditing: boolean
-  error?: string
-  onEdit: () => void
-  onBlur: () => void
+  field: "title" | "url" | "description";
+  value: string | undefined;
+  isEditing: boolean;
+  error?: string;
+  onEdit: () => void;
+  onBlur: () => void;
   register: UseFormRegister<{
-    title: string
-    url: string
-    description?: string | undefined
-  }>
-  placeholder?: string
-  type?: "text" | "textarea"
-}
+    title: string;
+    url: string;
+    description?: string | undefined;
+  }>;
+  placeholder?: string;
+  type?: "text" | "textarea";
+};
 
 const EditableField = ({
   field,
@@ -46,7 +46,7 @@ const EditableField = ({
         rows={type === "textarea" ? 2 : undefined}
         resize={false}
       />
-    )
+    );
   }
 
   return (
@@ -79,7 +79,7 @@ const EditableField = ({
         className="text-muted-foreground w-4 min-w-4 cursor-pointer"
       />
     </div>
-  )
-}
+  );
+};
 
-export default EditableField
+export default EditableField;
