@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 
 const VisibilityBadge = ({ visibility }: { visibility: string }) => {
   return (
@@ -15,7 +15,7 @@ const VisibilityBadge = ({ visibility }: { visibility: string }) => {
         {visibility.charAt(0).toUpperCase() + visibility.slice(1)}
       </span>
     </div>
-  )
-}
+  );
+};
 
-export default VisibilityBadge
+export default VisibilityBadge;

@@ -3,51 +3,57 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
-} from "@/components/ui/dropdown-menu"
-import { useShare } from "@/hooks/useShare"
-import { stopPropagation } from "@/lib/utils"
-import { useAppState } from "@/store/useAppStateStore"
-import { CollectionType } from "@/types/types"
+} from "@/components/ui/dropdown-menu";
+import { useShare } from "@/hooks/useShare";
+import { stopPropagation } from "@/lib/utils";
+import { useAppState } from "@/store/useAppStore";
+import { CollectionType } from "@/types/types";
 
-import { Ellipsis, Trash, Edit, Link2, Share2Icon } from "lucide-react"
-import Link from "next/link"
+import { Ellipsis, Trash, Edit, Link2, Share2Icon } from "lucide-react";
+import Link from "next/link";
 
+const CollectionCardActions = ({
+  collection,
+}: {
+  collection: CollectionType;
+}) => {
+  const { name, id } = collection;
 
-const CollectionCardActions = ({ collection }: { collection: CollectionType }) => {
-    const {name, id,} = collection
+  const { updateModal } = useAppState();
+  const { shareContent } = useShare();
 
-    const { updateModal } = useAppState()
-      const { shareContent } = useShare()
-    
-      const handleEditClick = () => {
-        updateModal({
-          status: "open",
-          modalType: "update collection",
-          modalProps: { collection },
-        })
-      }
-    
-      const handleDeleteClick = () => {
-        updateModal({
-          status: "open",
-          modalType: "delete collection",
-          modalProps: { collection },
-        })
-      }
-    
-      const handleShareClick = () => {
-        shareContent(
-          `Check out this collection: ${name.toLocaleUpperCase()}`,
-          collection.description ||
-            `Here's a collection I think you'll find useful.`,
-          `/collections/${id}`
-        )
-      }
+  const handleEditClick = () => {
+    updateModal({
+      status: "open",
+      modalType: "update collection",
+      modalProps: { collection },
+    });
+  };
+
+  // useEffect(() => {
+  //   console.log(collection)
+  // }, [collection])
+  const handleDeleteClick = () => {
+    updateModal({
+      status: "open",
+      modalType: "delete collection",
+      modalProps: { collection },
+    });
+  };
+
+  const handleShareClick = () => {
+    shareContent(
+      `Check out this collection: ${name.toLocaleUpperCase()}`,
+      collection.description ||
+        `Here's a collection I think you'll find useful.`,
+      `/collections/${id}`,
+    );
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button
-          className="rounded-full p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-800"
+          className="rounded-full p-1 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-800"
           aria-label="Collection options"
         >
           <Ellipsis className="h-5 w-5" />
@@ -57,8 +63,8 @@ const CollectionCardActions = ({ collection }: { collection: CollectionType }) =
       <DropdownMenuContent align="end" className="w-36">
         <DropdownMenuItem
           onClick={(e) => {
-            stopPropagation(e)
-            handleEditClick()
+            stopPropagation(e);
+            handleEditClick();
           }}
           className="group text-text-secondary hover:bg-bg-light flex items-center gap-2"
         >
@@ -68,8 +74,8 @@ const CollectionCardActions = ({ collection }: { collection: CollectionType }) =
 
         <DropdownMenuItem
           onClick={(e) => {
-            stopPropagation(e)
-            handleDeleteClick()
+            stopPropagation(e);
+            handleDeleteClick();
           }}
           className="group text-text-secondary flex items-center gap-2 hover:bg-red-100"
         >
@@ -79,8 +85,8 @@ const CollectionCardActions = ({ collection }: { collection: CollectionType }) =
 
         <DropdownMenuItem
           onClick={(e) => {
-            stopPropagation(e)
-            handleShareClick()
+            stopPropagation(e);
+            handleShareClick();
           }}
           className="group text-text-secondary hover:bg-bg-light flex items-center gap-2"
         >
@@ -101,7 +107,7 @@ const CollectionCardActions = ({ collection }: { collection: CollectionType }) =
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
-}
+  );
+};
 
-export default CollectionCardActions
+export default CollectionCardActions;

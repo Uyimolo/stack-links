@@ -1,21 +1,21 @@
-"use client" // Error boundaries must be Client Components
+"use client"; // Error boundaries must be Client Components
 
-import Fixing from "@/assets/svgs/Computer-troubleshooting-pana.svg"
-import { Button } from "@/components/global/Button"
-import { H1 } from "@/components/global/Text"
-import Image from "next/image"
-import { useEffect } from "react"
+import Fixing from "@/assets/svgs/Computer-troubleshooting-pana.svg";
+import { Button } from "@/components/global/Button";
+import { H1 } from "@/components/global/Text";
+import Image from "next/image";
+import { useEffect } from "react";
 
 export default function Error({
   error,
   reset,
 }: {
-  error: Error & { digest?: string }
-  reset: () => void
+  error: Error & { digest?: string };
+  reset: () => void;
 }) {
   useEffect(() => {
-    console.error(error)
-  }, [error])
+    console.error(error);
+  }, [error]);
 
   return (
     <div className="bg-background flex min-h-screen w-full flex-col items-center justify-center px-4 py-10 text-center">
@@ -52,5 +52,5 @@ export default function Error({
         </a>
       </p> */}
     </div>
-  )
+  );
 }

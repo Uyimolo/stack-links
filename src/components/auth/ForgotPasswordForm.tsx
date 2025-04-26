@@ -1,27 +1,27 @@
-"use client"
+"use client";
 
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import Input from "../global/Input"
-import { Button } from "../global/Button"
-import Link from "next/link"
-import { LogoSmall } from "../global/Logo"
-import { sendPasswordResetEmail } from "firebase/auth"
-import { useState } from "react"
-import { auth } from "@/config/firebase"
-import { FirebaseError } from "firebase/app"
-import { useFirebaseAuthError } from "@/hooks/useAuthHooks"
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Input } from "@/components/global/Input";
+import { Button } from "../global/Button";
+import Link from "next/link";
+import { LogoSmall } from "../global/Logo";
+import { sendPasswordResetEmail } from "firebase/auth";
+import { useState } from "react";
+import { auth } from "@/config/firebase";
+import { FirebaseError } from "firebase/app";
+import { useFirebaseAuthError } from "@/hooks/useAuthHooks";
 
 const schema = z.object({
   email: z.string().email("Invalid email address"),
-})
+});
 
-type FormValues = z.infer<typeof schema>
+type FormValues = z.infer<typeof schema>;
 
 const ForgotPasswordForm = () => {
-  const [message, setMessage] = useState("")
-  const { handleFirebaseAuthError } = useFirebaseAuthError()
+  const [message, setMessage] = useState("");
+  const { handleFirebaseAuthError } = useFirebaseAuthError();
 
   const {
     register,
@@ -30,22 +30,22 @@ const ForgotPasswordForm = () => {
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
     mode: "onChange",
-  })
+  });
 
   const onSubmit = async (data: FormValues) => {
     try {
-      await sendPasswordResetEmail(auth, data.email)
-      setMessage("Password reset link sent. Check your inbox.")
+      await sendPasswordResetEmail(auth, data.email);
+      setMessage("Password reset link sent. Check your inbox.");
     } catch (error) {
-      console.error(error)
-      handleFirebaseAuthError(error as FirebaseError)
+      console.error(error);
+      handleFirebaseAuthError(error as FirebaseError);
     }
-  }
+  };
 
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="mx-auto w-full max-w-[400px] space-y-6 rounded-2xl bg-white p-6"
+      className="mx-auto w-full max-w-[400px] space-y-6 rounded-2xl bg-white"
     >
       <LogoSmall />
       <div>
@@ -74,6 +74,7 @@ const ForgotPasswordForm = () => {
         type="submit"
         loading={isSubmitting}
         disabled={!isValid || isSubmitting}
+        className="w-full"
       >
         Send Reset Link
       </Button>
@@ -85,7 +86,7 @@ const ForgotPasswordForm = () => {
         </Link>
       </p>
     </form>
-  )
-}
+  );
+};
 
-export default ForgotPasswordForm
+export default ForgotPasswordForm;

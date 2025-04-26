@@ -1,53 +1,71 @@
-import { Trash, Share2, ImageIcon, BarChart2Icon } from "lucide-react"
-import TooltipComponent from "../global/TooltipComponent"
-import { LinkType } from "@/types/types"
-import { useAppState } from "@/store/useAppStateStore"
-import VisibilityToggle from "./VisibilityToggle"
+import { Trash, Share2, ImageIcon, BarChart2Icon, Tags } from "lucide-react";
+import TooltipComponent from "../global/TooltipComponent";
+import { LinkType } from "@/types/types";
+import { useAppState } from "@/store/useAppStore";
 
 const LinkActions = ({ link }: { link: LinkType }) => {
-  const { updateModal } = useAppState()
+  const { id } = link;
+  const { updateLinkCardExtension } = useAppState();
 
   return (
-    <div className="flex gap-3 pt-1 justify-between">
-      <div className="flex gap-6">
+    <div className="flex flex-wrap justify-between gap-6 borde rounded-xl">
+      <div className="flex items-center gap-6">
         <TooltipComponent
-          content="Delete link"
+          content="Tags"
+          className="justify-self-end"
           trigger={
-            <Trash
-              onClick={() =>
-                updateModal({
-                  status: "open",
-                  modalType: "delete link",
-                  modalProps: { link },
-                })
-              }
+            <Tags
+              className="text-muted-foreground w-4 cursor-pointer"
+              onClick={() => {
+                updateLinkCardExtension("view tags", id);
+              }}
+            />
+          }
+        />
+
+        <TooltipComponent
+          content="Share link"
+          trigger={
+            <Share2
+              onClick={() => {
+                updateLinkCardExtension("share link", id);
+              }}
               className="text-muted-foreground w-4 cursor-pointer"
             />
           }
         />
         <TooltipComponent
-          content="Share link"
-          trigger={
-            <Share2 className="text-muted-foreground w-4 cursor-pointer" />
-          }
-        />
-        <TooltipComponent
           content="Upload image"
           trigger={
-            <ImageIcon className="text-muted-foreground w-4 cursor-pointer" />
+            <ImageIcon
+              className="text-muted-foreground w-4 cursor-pointer"
+              onClick={() => {
+                updateLinkCardExtension("upload link image", id);
+              }}
+            />
           }
         />
         <TooltipComponent
-          content="10 Clicks"
+          content="Clicks"
           trigger={
             <BarChart2Icon className="text-muted-foreground w-4 cursor-pointer" />
           }
         />
       </div>
 
-      <VisibilityToggle link={link} />
+      <TooltipComponent
+        content="Delete link"
+        trigger={
+          <Trash
+            onClick={() => {
+              updateLinkCardExtension("delete link", id);
+            }}
+            className="text-muted-foreground w-4 cursor-pointer"
+          />
+        }
+      />
     </div>
-  )
-}
+  );
+};
 
-export default LinkActions
+export default LinkActions;

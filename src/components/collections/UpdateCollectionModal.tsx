@@ -1,21 +1,25 @@
-"use client"
-import { CollectionType } from "@/types/types"
-import { zodResolver } from "@hookform/resolvers/zod"
-import React, { useState } from "react"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
+"use client";
+
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import React, { useState } from "react";
+import { useAppState } from "@/store/useAppStore";
+import { useCollectionActions } from "@/hooks/useCollectionHooks";
+import { CollectionType } from "@/types/types";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import Input from "../global/Input"
-import { Button } from "../global/Button"
-import { useAppState } from "@/store/useAppStateStore"
-import { X } from "lucide-react"
-import { useCollectionActions } from "@/hooks/useCollectionHooks"
+} from "@/components/ui/select";
+import { FileInput, Input } from "../global/Input";
+import { Button } from "../global/Button";
+import { X } from "lucide-react";
+import { auth } from "@/config/firebase";
+import { useCloudinaryUpload } from "@/hooks/useCloudinary";
+import { toast } from "sonner";
 
 const schema = z.object({
   name: z
@@ -25,56 +29,91 @@ const schema = z.object({
   description: z.string().optional(),
   visibility: z.enum(["public", "private", "unlisted"]).optional(),
   tags: z.string().optional(),
-})
+  image: z
+    .instanceof(File)
+    .refine((file) => file.size <= 5 * 1024 * 1024, "Max file size is 5MB")
+    .refine(
+      (file) => file.type.startsWith("image/"),
+      "Only image files allowed",
+    )
+    .optional(),
+});
 
-type FormData = z.infer<typeof schema>
+type FormData = z.infer<typeof schema>;
 
 const UpdateCollectionModal = ({
   collection,
 }: {
-  collection: CollectionType
+  collection: CollectionType;
 }) => {
-  const { updateModal } = useAppState()
-  const [error, setError] = useState<string | null>(null)
-  const { editCollection } = useCollectionActions()
+  const { updateModal } = useAppState();
+  const { editCollection, loading } = useCollectionActions();
+  const [error, setError] = useState<string | null>(null);
+  const { upload, error: cloudinaryError } = useCloudinaryUpload();
 
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
     setValue,
     watch,
   } = useForm<FormData>({
+    resolver: zodResolver(schema),
     defaultValues: {
       name: collection.name,
       description: collection.description,
       visibility: collection.visibility,
-      tags: collection.tags?.join(","),
+      tags: collection.tags?.join(",") || "",
     },
-    resolver: zodResolver(schema),
     mode: "onChange",
-  })
+  });
 
   const onSubmit = async (data: FormData) => {
-    setError(null)
-
+    setError(null);
     try {
-      const formattedTags = data.tags
-        ? data.tags.split(",").map((tag) => tag.trim())
-        : []
-      await editCollection({
+      const tagsArray =
+        data.tags
+          ?.split(",")
+          .map((tag) => tag.trim())
+          .filter(Boolean) || [];
+
+      const uid = auth.currentUser?.uid;
+      let imageUrl = "";
+
+      if (data.image) {
+        // console.log(data.image)
+        const publicId = `collections/${uid}-${collection.id}`;
+        const result = await upload(data.image, publicId);
+
+        if (!result || cloudinaryError) {
+          toast.error("Image upload failed");
+          return;
+        }
+
+        imageUrl = result;
+        console.log(imageUrl);
+      }
+
+      const params = {
         collectionId: collection.id,
-        name: data.name ?? "",
-        description: data.description ?? "",
-        visibility: data.visibility ?? "public",
-        tags: formattedTags,
-      })
-      updateModal({ status: "close", modalType: null }) // Close modal on success
+        userId: uid,
+        name: data.name || collection.name,
+        description: data.description || "",
+        visibility: data.visibility || collection.visibility,
+        tags: tagsArray,
+        imageUrl: imageUrl ? imageUrl : collection.imageUrl, // Use existing image if no new one is uploaded
+      };
+
+      await editCollection(params);
+      updateModal({ status: "close", modalType: null });
     } catch (err) {
-      setError("Failed to update collection. Please try again.")
-      console.error("Error updating collection:", err)
+      console.error(err);
+      setError("Failed to update collection. Please try again.");
     }
-  }
+  };
+
+  // console.log(collection)
 
   return (
     <div className="w-[calc(100vw-48px)] max-w-sm rounded-lg bg-white p-6 shadow-lg md:max-w-md">
@@ -83,10 +122,9 @@ const UpdateCollectionModal = ({
           Update Collection
         </h2>
         <button
-          className="text-gray-500 hover:text-gray-700"
           onClick={() => updateModal({ status: "close", modalType: null })}
         >
-          <X className="h-5 w-5" />
+          <X className="h-5 w-5 text-gray-500 hover:text-gray-700" />
         </button>
       </div>
 
@@ -100,26 +138,25 @@ const UpdateCollectionModal = ({
           placeholder="Enter collection name"
           error={errors.name?.message}
         />
-
         <Input
+          label="Description"
           type="textarea"
           register={register}
           name="description"
           placeholder="Enter collection description"
           error={errors.description?.message}
         />
-
         <div>
           <label className="text-sm font-medium text-gray-700">
             Visibility
           </label>
           <Select
             value={watch("visibility")}
-            onValueChange={(value) =>
-              setValue("visibility", value as "public" | "private" | "unlisted")
+            onValueChange={(val) =>
+              setValue("visibility", val as "public" | "private" | "unlisted")
             }
           >
-            <SelectTrigger className="w-full rounded-lg border p-3 py-5 text-sm">
+            <SelectTrigger className="h-full w-full border p-5 px-3 text-sm">
               <SelectValue placeholder="Select visibility" />
             </SelectTrigger>
             <SelectContent>
@@ -139,14 +176,31 @@ const UpdateCollectionModal = ({
           name="tags"
           placeholder="Enter tags (comma separated)"
           error={errors.tags?.message}
+          label="Tags"
         />
 
-        <Button type="submit" className="bg-primary w-full text-white">
+        <Controller
+          control={control}
+          name="image"
+          render={({ field, fieldState }) => (
+            <FileInput
+              value={field.value}
+              onChange={field.onChange}
+              error={fieldState.error?.message}
+            />
+          )}
+        />
+
+        <Button
+          type="submit"
+          loading={loading}
+          className="bg-primary w-full text-white"
+        >
           Update Collection
         </Button>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default UpdateCollectionModal
+export default UpdateCollectionModal;

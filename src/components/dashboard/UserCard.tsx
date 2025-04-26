@@ -1,21 +1,29 @@
-import React from "react"
-import { Paragraph } from "../global/Text"
+import React from "react";
+import { Paragraph } from "../global/Text";
+import { useAppState } from "@/store/useAppStore";
+import { cn } from "@/lib/cn";
 
 const UserCard = () => {
+  const { showSidebar } = useAppState();
   return (
-    <div className="border-border-light bg-white/50 hover:bg-accent mx-6 flex h-16 items-center gap-2 overflow-hidden rounded-lg border p-2">
+    <div
+      className={cn(
+        "border-grey-3 hover:bg-accent flex h-16 items-center gap-2 overflow-hidden rounded-lg borde bg-white",
+        showSidebar ? "mx-4 p-2" : "mx-4 border-none bg-transparent p-0",
+      )}
+    >
       {/* profile image */}
-      <div className="bg-bg-dark aspect-square h-full rounded-full"></div>
+      <div className="bg-grey-5 aspect-square h-auto w-full rounded-full"></div>
 
       {/* user details */}
-      <div className="w-[70%]">
-        <Paragraph className="truncate" size="sm">John Doe</Paragraph>
-        <Paragraph className="truncate" size="xs">
+      <div className={cn("w-[70%]", !showSidebar && "hidden")}>
+        <Paragraph className="truncate text-xs">John Doe</Paragraph>
+        <Paragraph className="truncate text-[11px]">
           Software Engineer
         </Paragraph>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default UserCard
+export default UserCard;

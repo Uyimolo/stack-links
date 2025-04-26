@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@hookform/resolvers": "^4.1.3",
@@ -19,6 +20,7 @@
     "@tailwindcss/postcss": "^4.0.17",
     "@tanstack/react-query": "^5.70.0",
     "class-variance-authority": "^0.7.1",
+    "cloudinary": "^2.6.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "firebase": "^11.5.0",
@@ -28,6 +30,7 @@
     "postcss": "^8.5.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-dropzone": "^14.3.8",
     "react-hook-form": "^7.55.0",
     "sonner": "^2.0.3",
     "tailwind-animate": "^0.2.10",

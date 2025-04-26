@@ -1,9 +1,9 @@
-import DashboardLayoutComp from "@/components/dashboard/DashboardLayoutComp"
+import DashboardLayoutComp from "@/components/dashboard/DashboardLayoutComp";
 
 export default function DashboardLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-  return <DashboardLayoutComp>{children}</DashboardLayoutComp>
+  return <DashboardLayoutComp>{children}</DashboardLayoutComp>;
 }

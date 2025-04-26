@@ -1,18 +1,18 @@
-import { cn } from "@/lib/cn"
-import React from "react"
+import { cn } from "@/lib/cn";
+import React from "react";
 
 const Loading = ({
   loadingText = "",
   className = "",
 }: {
-  loadingText?: string
-  className?: string
+  loadingText?: string;
+  className?: string;
 }) => {
   return (
     <div
       className={cn(
         "flex w-full h-screen items-center justify-center",
-        className
+        className,
       )}
     >
       <div className="text-center">
@@ -21,7 +21,7 @@ const Loading = ({
         <p className="text-text-muted text-base">{loadingText}</p>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Loading
+export default Loading;

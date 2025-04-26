@@ -1,24 +1,24 @@
-import { UseFormRegister } from "react-hook-form"
-import Input from "../global/Input"
-import { Edit3 } from "lucide-react"
-import TooltipComponent from "../global/TooltipComponent"
-import { Paragraph } from "../global/Text"
+import { UseFormRegister } from "react-hook-form";
+import { Input } from "@/components/global/Input";
+import { Edit3 } from "lucide-react";
+import TooltipComponent from "../global/TooltipComponent";
+import { Paragraph } from "../global/Text";
 
 type EditableFieldProps = {
-  field: "title" | "url" | "description"
-  value: string | undefined
-  isEditing: boolean
-  error?: string
-  onEdit: () => void
-  onBlur: () => void
+  field: "title" | "url" | "description";
+  value: string | undefined;
+  isEditing: boolean;
+  error?: string;
+  onEdit: () => void;
+  onBlur: () => void;
   register: UseFormRegister<{
-    title: string
-    url: string
-    description?: string | undefined
-  }>
-  placeholder?: string
-  type?: "text" | "textarea"
-}
+    title: string;
+    url: string;
+    description?: string | undefined;
+  }>;
+  placeholder?: string;
+  type?: "text" | "textarea";
+};
 
 const EditableField = ({
   field,
@@ -46,14 +46,16 @@ const EditableField = ({
         rows={type === "textarea" ? 2 : undefined}
         resize={false}
       />
-    )
+    );
   }
 
   return (
-    <div className="flex w-full items-center gap-1 border-black">
+    <div
+      className={`flex border-black ${type === "textarea" ? "h-10" : "h-6 items-center"} w-full gap-1`}
+    >
       {field === "title" ? (
         <Paragraph
-          className={`${type === "textarea" ? "line-clamp-2 h-10" : "line-clamp-1 h-6"} text-sm capitalize`}
+          className={`${type === "textarea" ? "line-clamp-2" : "line-clamp-1"} w-fit text-text-primary text-sm capitalize`}
           // variant="primary"
         >
           {value || "No value"}
@@ -61,13 +63,13 @@ const EditableField = ({
       ) : (
         <TooltipComponent
           content={value || "No value"}
-          className="w-fit place-content-start border border-transparent text-left hover:bg-transparent"
+          className="border border-transparent h-fit text-left hover:bg-transparent p-0"
           trigger={
             <Paragraph
-              className={`${type === "textarea" ? "line-clamp-2 h-10" : "line-clamp-1 h-6"} text-sm`}
+              className={`${type === "textarea" ? "line-clamp-2" : "line-clamp-1"} text-sm`}
             >
               {value ||
-                `${field === "description" ? "No description" : "No value"}`}
+                `${field === "description" ? "Add description" : "Add link address"}`}
             </Paragraph>
           }
         />
@@ -77,7 +79,7 @@ const EditableField = ({
         className="text-muted-foreground w-4 min-w-4 cursor-pointer"
       />
     </div>
-  )
-}
+  );
+};
 
-export default EditableField
+export default EditableField;

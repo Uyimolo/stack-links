@@ -1,15 +1,17 @@
-import { H1 } from "../global/Text"
-import SidebarMenuBtn from "./SidebarMenuBtn"
+import { Logo } from "../global/Logo";
+import SidebarMenuBtn from "./SidebarMenuBtn";
 
 const Header = () => {
   return (
-    <header className="bg-white flex h-20 w-full items-center gap-4 px-4">
-      <SidebarMenuBtn />
-      <div className="flex h-full w-full items-center justify-between">
-        <H1>Dashboard</H1>
+    <header className="px-4 md:hidden">
+      <div className="flex h-20 w-full items-center justify-betwee gap-2">
+        <SidebarMenuBtn />
+        <Logo />
       </div>
-    </header>
-  )
-}
 
-export default Header
+      <div className="border-grey-3 w-full border-b"></div>
+    </header>
+  );
+};
+
+export default Header;

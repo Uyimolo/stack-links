@@ -1,9 +1,9 @@
-import React, { useState } from "react"
+import React, { useState } from "react";
 
 const Tags = ({ tags }: { tags: string[] }) => {
-  const [showAllTags, setShowAllTags] = useState(false)
+  const [showAllTags, setShowAllTags] = useState(false);
 
-  const visibleTags = showAllTags ? tags : tags?.slice(0, 2)
+  const visibleTags = showAllTags ? tags : tags?.slice(0, 2);
 
   return (
     <div>
@@ -13,14 +13,17 @@ const Tags = ({ tags }: { tags: string[] }) => {
           {visibleTags?.map((tag, index) => (
             <span
               key={index}
-              className="bg-white border text-text-secondary rounded-full px-2.5 py-0.5 text-xs font-medium text-nowrap transition-colors hover:bg-gray-200"
+              className="bg-blue-2 borde text-primary rounded-full px-2.5 py-0.5 text-xs text-nowrap transition-colors hover:bg-gray-200"
             >
               {tag.trim()}
             </span>
           ))}
           {tags.length > 3 && !showAllTags && (
             <button
-              onClick={() => setShowAllTags(true)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowAllTags(true);
+              }}
               className="text-text-muted text-xs text-nowrap"
             >
               See More
@@ -28,7 +31,10 @@ const Tags = ({ tags }: { tags: string[] }) => {
           )}
           {showAllTags && (
             <button
-              onClick={() => setShowAllTags(false)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowAllTags(false);
+              }}
               className="text-text-muted text-xs text-nowrap"
             >
               See Less
@@ -37,7 +43,7 @@ const Tags = ({ tags }: { tags: string[] }) => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default Tags
+export default Tags;

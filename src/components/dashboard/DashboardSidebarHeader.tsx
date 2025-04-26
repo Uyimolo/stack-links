@@ -1,6 +1,6 @@
-import { Sidebar } from "lucide-react"
-import React, { ReactNode } from "react"
-import Header from "./Header"
+import { Sidebar } from "lucide-react";
+import React, { ReactNode } from "react";
+import Header from "./Header";
 
 const DashboardSidebarHeader = ({ children }: { children: ReactNode }) => {
   return (
@@ -11,7 +11,7 @@ const DashboardSidebarHeader = ({ children }: { children: ReactNode }) => {
         {children}
       </div>
     </main>
-  )
-}
+  );
+};
 
-export default DashboardSidebarHeader
+export default DashboardSidebarHeader;

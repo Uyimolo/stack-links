@@ -1,43 +1,55 @@
-import { useState, useRef, useEffect, ChangeEvent } from "react"
-import { SearchIcon, Loader2, X } from "lucide-react"
-import { useSearch } from "@/hooks/useSearch"
-import { auth } from "@/config/firebase"
-import { cn } from "@/lib/cn"
+import { useState, useRef, useEffect, ChangeEvent } from "react";
+import { SearchIcon, Loader2, X } from "lucide-react";
+import { useSearch } from "@/hooks/useSearch";
+import { auth } from "@/config/firebase";
+import { cn } from "@/lib/cn";
+
+const highlightMatch = (text: string, query: string) => {
+  if (!query) return text;
+
+  const regex = new RegExp(`(${query})`, "gi");
+  return text.split(regex).map((part, index) =>
+    part.toLowerCase() === query.toLowerCase() ? (
+      <span key={index} className="bg-blue-1">
+        {part}
+      </span>
+    ) : (
+      part
+    ),
+  );
+};
 
 export default function DropdownSearch() {
-  const userId = auth.currentUser?.uid || ""
-  const [query, setQuery] = useState("")
-  const [isOpen, setIsOpen] = useState(false)
+  const userId = auth.currentUser?.uid || "";
+  const [query, setQuery] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
   // const [selectedIndex, setselectedIndex] = useState<number | null>(null)
-  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
-  const inputRef = useRef<HTMLInputElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null);
   // const dropdownRef = useRef<HTMLDivElement>(null)
-  const listRef = useRef<HTMLDivElement>(null)
-  const dropdownRef = useRef<HTMLUListElement | null>(null)
+  const listRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLUListElement | null>(null);
   const listItemRefs = useRef<(HTMLLIElement | null)[]>([]) as React.RefObject<
     (HTMLLIElement | null)[]
-  >
+  >;
 
   // Use the search hook to get links and collections
-  const { links, collections, searching } = useSearch(
-    userId,
-    query
-  )
+  const { links, collections, searching } = useSearch(userId, query);
 
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = "hidden"
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = ""
+      document.body.style.overflow = "";
     }
-  }, [isOpen])
+  }, [isOpen]);
 
   const clearSearch = () => {
-    setQuery("")
-    setIsOpen(false)
-    setSelectedIndex(-1)
-  }
+    setQuery("");
+    setIsOpen(false);
+    setSelectedIndex(-1);
+  };
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -45,73 +57,73 @@ export default function DropdownSearch() {
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target as Node)
       ) {
-        setIsOpen(false)
+        setIsOpen(false);
       }
     }
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => document.removeEventListener("mousedown", handleClickOutside)
-  }, [])
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     // Show dropdown when we have results and query is not empty
     if (query.trim() && (links.length > 0 || collections.length > 0)) {
-      setIsOpen(true)
+      setIsOpen(true);
     } else if (!query.trim()) {
-      setIsOpen(false)
+      setIsOpen(false);
     }
-  }, [query, links, collections])
+  }, [query, links, collections]);
 
   useEffect(() => {
     // Scroll the highlighted item into view
     if (selectedIndex !== null && listRef.current) {
-      const item = listRef.current.children[selectedIndex] as HTMLElement
+      const item = listRef.current.children[selectedIndex] as HTMLElement;
       if (item) {
         item.scrollIntoView({
           behavior: "smooth",
           block: "nearest",
-        })
+        });
       }
     }
-  }, [selectedIndex])
+  }, [selectedIndex]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    setQuery(value)
+    const value = e.target.value;
+    setQuery(value);
 
     if (value.trim()) {
       // Open dropdown when typing
-      setIsOpen(true)
+      setIsOpen(true);
     } else {
-      setIsOpen(false)
+      setIsOpen(false);
     }
-  }
+  };
 
   // Handle keyboard navigation
   function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
     // const options = query === "" ? recentSearches : filteredClients || []
-    const options = allItems
+    const options = allItems;
 
-    if (options.length === 0) return
+    if (options.length === 0) return;
 
     if (event.key === "ArrowDown") {
-      event.preventDefault()
+      event.preventDefault();
       setSelectedIndex((prev) => {
-        const newIndex = prev < options.length - 1 ? prev + 1 : 0
-        listItemRefs.current[newIndex]?.scrollIntoView({ block: "nearest" })
-        return newIndex
-      })
+        const newIndex = prev < options.length - 1 ? prev + 1 : 0;
+        listItemRefs.current[newIndex]?.scrollIntoView({ block: "nearest" });
+        return newIndex;
+      });
     } else if (event.key === "ArrowUp") {
-      event.preventDefault()
+      event.preventDefault();
       setSelectedIndex((prev) => {
-        const newIndex = prev > 0 ? prev - 1 : options.length - 1
-        listItemRefs.current[newIndex]?.scrollIntoView({ block: "nearest" })
-        return newIndex
-      })
+        const newIndex = prev > 0 ? prev - 1 : options.length - 1;
+        listItemRefs.current[newIndex]?.scrollIntoView({ block: "nearest" });
+        return newIndex;
+      });
     } else if (event.key === "Enter" && selectedIndex !== -1) {
-      setQuery(options[selectedIndex].name)
-      setIsOpen(false)
+      setQuery(options[selectedIndex].name);
+      setIsOpen(false);
     } else if (event.key === "Escape") {
-      clearSearch()
+      clearSearch();
     }
   }
 
@@ -129,11 +141,11 @@ export default function DropdownSearch() {
   // }
 
   const allItems: {
-    type: "link" | "collection"
-    id: string
-    name: string
-    url?: string
-    description?: string
+    type: "link" | "collection";
+    id: string;
+    name: string;
+    url?: string;
+    description?: string;
   }[] = [
     ...collections.map((collection) => ({
       type: "collection" as const,
@@ -149,8 +161,7 @@ export default function DropdownSearch() {
       url: link.url,
       description: link.description,
     })),
-  ]
-
+  ];
 
   return (
     <div className="relative w-full">
@@ -163,7 +174,7 @@ export default function DropdownSearch() {
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
           onFocus={() => query.trim() && setIsOpen(true)}
-          className="border-border-medium h-12 w-full rounded-lg border px-4 text-sm focus:ring-0 focus:ring-transparent"
+          className="border-grey-3 bg-white h-12 w-full rounded-lg border px-4 text-sm focus:ring-0 focus:ring-transparent"
           aria-haspopup="listbox"
         />
         <div className="absolute top-1/2 right-4 -translate-y-1/2">
@@ -183,30 +194,32 @@ export default function DropdownSearch() {
           id="dropdown-list"
           role="listbox"
           className={cn(
-            "absolute z-10 mt-2 flex max-h-[260px] w-full flex-col overflow-auto rounded-md bg-white lg:overflow-hidden",
-            allItems.length ? "border-border-medium border" : ""
+            "shadow-grey absolute z-10 mt-2 flex max-h-[260px] w-fit flex-col overflow-auto rounded-md bg-white shadow-lg lg:overflow-hidden",
+            allItems.length ? "border-grey-3 border" : "",
           )}
         >
           {query !== "" &&
             allItems.map((item, index) => (
               <li
                 key={item.id}
-                className={`hover:bg-bg-light-grey border-b-border-light flex cursor-pointer items-stretch gap-2 border-b p-2 ${
+                className={`hover:bg-bg-light-grey border-b-border-light flex w-full cursor-pointer items-stretch gap-2 border-b p-2 ${
                   selectedIndex === index
-                    ? "lg:bg-bg-light-grey"
-                    : "bg-transparent"
+                    ? "lg:bg-grey-5"
+                    : "hover:bg-grey-6 bg-transparent"
                 }`}
                 ref={(el) => {
-                  listItemRefs.current[index] = el
+                  listItemRefs.current[index] = el;
                 }}
               >
                 <div className="flex flex-col space-y-1 p-2">
-                  <span className="text-sm font-semibold">{item.name}</span>
+                  <span className="line-clamp-1 text-sm font-semibold">
+                    {highlightMatch(item.name, query)}
+                  </span>
                   <span className="line-clamp-1 text-xs text-gray-500">
-                    {item.url || ""}
+                    {highlightMatch(item.url || "", query)}
                   </span>
                   <span className="line-clamp-2 text-xs text-gray-500">
-                    {item.description || ""}
+                    {highlightMatch(item.description || "", query)}
                   </span>
                 </div>
               </li>
@@ -214,5 +227,5 @@ export default function DropdownSearch() {
         </ul>
       )}
     </div>
-  )
+  );
 }
