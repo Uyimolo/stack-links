@@ -9,9 +9,9 @@ const CollectionCard = ({ collection }: { collection: CollectionType }) => {
   const { id, name, description, visibility, imageUrl, tags = [] } = collection;
 
   return (
-    <div className="group border-grey hover:border-grey-3 group flex w-full flex-col overflow-hidden rounded-xl borde bg-cover transition-all duration-300 hover:scale-102 hover:shadow-xl ">
+    <div className="group border-grey-6 shadow p-1 hover:border-grey-3 border group flex w-full flex-col overflow-hidden rounded-xl borde bg-cover transition-all duration-300 hover:scale-102 hover:shadow-xl ">
       {/* content */}
-      <Link href={`/collections/${id}`} className=" p-2">
+      <Link href={`/collections/${id}`} className="">
         {/* image */}
         <div
           className="bg-grey-4 aspect-square bg-cover bg-cente h-40 w-full rounded-xl bg-cove bg-no-repeat p-2"
@@ -34,7 +34,7 @@ const CollectionCard = ({ collection }: { collection: CollectionType }) => {
             "This collection doesn't have a description yet. Click the actions dropdown icon to add one!"}
         </Paragraph>
       </Link>
-      <div className="p-2">
+      <div className="p-2 mt-1">
         <Tags tags={tags} />
       </div>
     </div>

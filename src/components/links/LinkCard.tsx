@@ -67,13 +67,13 @@ const LinkCard = ({ link }: { link: LinkType }) => {
 
   return (
     <div className="hover:bg-grey-6 border-grey-3/40 overflow-hidden rounded-xl border bg-white shadow transition duration-300">
-      <div className="group flex w-full items-center gap-3 p-4 transition duration-300">
+      <div className="group flex w-full items-center gap-3 p-2 transition duration-300">
         {/* header */}
 
         <GripVertical className="text-muted-foreground w-4 cursor-grab" />
 
-        <div className="w-full space-y-3 border-l pl-2">
-          <div className="">
+        <div className="w-full space-y-3 pl-2 border-l">
+          <div className="space-y-1">
             <div className="flex items-start justify-between gap-4">
               <EditableField
                 field="title"

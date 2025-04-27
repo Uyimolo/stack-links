@@ -14,9 +14,11 @@ import { useAppState } from "@/store/useAppStore";
 import { cn } from "@/lib/cn";
 import SidebarMenuBtn from "./SidebarMenuBtn";
 import { usePathname } from "next/navigation";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const Sidebar = () => {
   const { toggleSidebar, showSidebar, setShowSidebar } = useAppState();
+  const { logoutUser } = useAuthStore();
 
   const dashboardLinks = [
     {
@@ -47,15 +49,23 @@ const Sidebar = () => {
     },
     {
       label: "Logout",
-      path: "/logout",
+      // path: '/logout',
       icon: LogOutIcon,
-      onClick: () => toggleSidebar(),
+      onClick: () => logoutUser(),
     },
   ];
 
   const pathname = usePathname();
 
   const isActive = (path: string): boolean => pathname.includes(path);
+
+  const handleToggleSidebar = () => {
+    if (window.innerWidth >= 768) {
+      return;
+    }
+
+    toggleSidebar();
+  };
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -68,7 +78,7 @@ const Sidebar = () => {
     <>
       {/* overlay */}
       <div
-        onClick={toggleSidebar}
+        onClick={handleToggleSidebar}
         className={cn(
           "bg-grey/50 fixed top-0 z-10 h-screen w-screen transition duration-500 md:hidden",
           showSidebar ? "" : "-translate-x-full",
@@ -105,8 +115,21 @@ const Sidebar = () => {
         <nav>
           <ul className="flex flex-col">
             {dashboardLinks.map((link, index) => (
-              <>
-                <li className="md:hidden" key={index} onClick={toggleSidebar}>
+              <li className="" key={index} onClick={handleToggleSidebar}>
+                {!link.path ? (
+                  <div className="">
+                    <button
+                      className="group flex h-12 hover:bg-grey-4 hover:border-primary/50 items-center gap-2 border-r-4 border-transparent w-full px-4 text-sm transition duration-300 ease-in-out"
+                      onClick={link.onClick}
+                    >
+                      <link.icon className="text-text-secondary h-5 w-5" />
+                      <span className={cn(showSidebar ? "" : "hidden")}>
+                        {" "}
+                        {link.label}
+                      </span>
+                    </button>
+                  </div>
+                ) : (
                   <Link
                     href={link.path}
                     className={cn(
@@ -123,35 +146,8 @@ const Sidebar = () => {
                       {link.label}
                     </span>
                   </Link>
-                </li>
-                <li
-                  className="hidden md:block"
-                  key={link.label}
-                  // onClick={toggleSidebar}
-                >
-                  <Link
-                    href={link.path}
-                    className={cn(
-                      "group flex h-12 items-center gap-2 border-r-4 border-transparent px-4 text-sm transition duration-300 ease-in-out",
-                      isActive(link.path)
-                        ? "bg-blue-2 border-primary"
-                        : "hover:bg-grey-6 hover:border-primary/50",
-                    )}
-                  >
-                    <link.icon className="text-text-secondary max-h-5 min-h-5 max-w-5 min-w-5" />
-
-                    <span
-                      className={cn(
-                        "overflow-hidden",
-                        showSidebar ? "w-full" : "w-0",
-                      )}
-                    >
-                      {" "}
-                      {link.label}
-                    </span>
-                  </Link>
-                </li>
-              </>
+                )}
+              </li>
             ))}
           </ul>
         </nav>

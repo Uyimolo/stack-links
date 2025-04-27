@@ -179,6 +179,22 @@ export const getLinksInCollection = async ({
   })) as LinkType[];
 };
 
+/*
+ * Get links (unauthenticated) not used yet
+ */
+
+export const getLinks = async (collectionId: string): Promise<LinkType[]> => {
+  const linksRef = collection(db, "allLinks");
+  const q = query(linksRef, where("collectionId", "==", collectionId));
+  const querySnapshot = await getDocs(q);
+
+  return querySnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+    createdAt: doc.data().createdAt.toDate().toISOString(),
+  })) as LinkType[];
+};
+
 /**
  * Get a single link by ID
  */

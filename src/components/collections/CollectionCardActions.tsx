@@ -46,7 +46,7 @@ const CollectionCardActions = ({
       `Check out this collection: ${name.toLocaleUpperCase()}`,
       collection.description ||
         `Here's a collection I think you'll find useful.`,
-      `/collections/${id}`,
+      `/public/collection/${id}`,
     );
   };
   return (
