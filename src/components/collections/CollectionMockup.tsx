@@ -2,11 +2,12 @@ import { auth } from "@/config/firebase";
 import { useLinks } from "@/hooks/useLinkHooks";
 import React from "react";
 import { Paragraph } from "../global/Text";
-import { DropdownMenu } from "../ui/dropdown-menu";
 import {
+  DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "@radix-ui/react-dropdown-menu";
+} from "../ui/dropdown-menu";
+
 import { MoreVertical } from "lucide-react";
 import Loading from "../global/Loading";
 
@@ -34,7 +35,7 @@ const CollectionMockup = ({ collectionId }: { collectionId: string }) => {
               className="flex items-center gap-1 overflow-hidden rounded-full bg-white p-1"
             >
               <div
-                className="bg-grey-3 aspect-square w-8 rounded-full border bg-cover"
+                className="bg-grey-3 aspect-square w-12 rounded-full border bg-cover"
                 style={{ backgroundImage: `url(${link.imageUrl})` }}
               ></div>
 
@@ -43,7 +44,7 @@ const CollectionMockup = ({ collectionId }: { collectionId: string }) => {
               </Paragraph>
 
               <DropdownMenu>
-                <DropdownMenuTrigger>
+                <DropdownMenuTrigger className="w-10">
                   <MoreVertical className="text-grey-1 w-4" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent></DropdownMenuContent>

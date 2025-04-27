@@ -163,15 +163,15 @@ export const FileInput = ({
         {...getRootProps()}
         className={cn(
           "relative mx-auto grid aspect-square h-40 place-content-center rounded-3xl border-2 border-dashed transition",
-          isDragActive
-            ? "border-blue-400 bg-blue-50"
-            : "border-gray-300 bg-white",
+          isDragActive ? "border-primary" : "border-grey-3",
         )}
         style={{
           backgroundImage: previewUrl
             ? `url(${previewUrl})`
             : `url(${imageUrl})`,
           backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
         }}
       >
         <input {...getInputProps()} />
@@ -180,14 +180,16 @@ export const FileInput = ({
         )} */}
 
         {loading ? (
-          <Loader2 className="mx-auto animate-spin" />
+          <div className="bg-grey-3 w-fit h-fit p-1 mx-auto">
+            <Loader2 className="mx-auto text-primary animate-spin" />
+          </div>
         ) : !previewUrl ? (
           <ImageUploadSVG className="pointer-events-none mx-auto fill-blue-400" />
         ) : (
           <></>
         )}
         <p
-          className={`pointer-events-none p-1 text-center text-sm ${!previewUrl ? "text-text-secondary" : "w-[90%] bg-black/40 text-white"} mx-auto rounded`}
+          className={`pointer-events-none p-1 text-center text-sm  text-white mx-auto rounded`}
         >
           {isDragActive
             ? "Drop the file..."

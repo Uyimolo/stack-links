@@ -31,7 +31,7 @@ export const useCollectionActions = () => {
   };
 };
 
-export const useSingleCollection = (userId: string, collectionId: string) => {
+export const useSingleCollection = (collectionId: string, userId?: string) => {
   const { fetchCollectionById } = useLinkStore();
   const [collection, setCollection] = useState<CollectionType | null>();
   const [loading, setLoading] = useState<boolean>(false);

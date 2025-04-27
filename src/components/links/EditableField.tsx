@@ -55,7 +55,7 @@ const EditableField = ({
     >
       {field === "title" ? (
         <Paragraph
-          className={`${type === "textarea" ? "line-clamp-2" : "line-clamp-1"} w-fit text-text-primary text-sm capitalize`}
+          className={`${type === "textarea" ? "line-clamp-2" : "line-clamp-1"} w-fit text-text-primary font-semibold text-sm capitalize`}
           // variant="primary"
         >
           {value || "No value"}

@@ -9,9 +9,9 @@ const Empty = ({
   buttonText,
   buttonOnClick,
 }: {
-  text: string;
-  buttonText: string;
-  buttonOnClick: () => void;
+  text?: string;
+  buttonText?: string;
+  buttonOnClick?: () => void;
 }) => {
   return (
     <div className="space-y-4">
@@ -22,10 +22,12 @@ const Empty = ({
         priority
       />
       <Paragraph className="text-center text-base">{text}</Paragraph>
-      <Button onClick={buttonOnClick} className="mx-auto w-full max-w-xs">
-        <Plus />
-        {buttonText}
-      </Button>
+      {buttonText && (
+        <Button onClick={buttonOnClick} className="mx-auto w-full max-w-xs">
+          <Plus />
+          {buttonText}
+        </Button>
+      )}
     </div>
   );
 };
