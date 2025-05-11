@@ -32,7 +32,8 @@ const schema = z.object({
     .refine(
       (file) => file.type.startsWith("image/"),
       "Only image files allowed",
-    ),
+    )
+    .optional(),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -95,6 +96,7 @@ const AddCollectionModal = () => {
     try {
       await addCollection(params);
       toast.success("Collection created");
+      updateModal({ status: "close", modalType: null });
     } catch (err) {
       console.error("Firestore error:", err);
       toast.error("Failed to create collection");

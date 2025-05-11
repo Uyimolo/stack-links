@@ -25,6 +25,7 @@ export type LinkType = {
   tags?: string[];
   visibility: "public" | "private" | "unlisted";
   pinned?: boolean;
+  order?: number;
 };
 
 export type ModalType =
@@ -73,4 +74,17 @@ export type User = {
     theme: "light" | "dark" | "system";
     layout: "grid" | "list";
   };
+};
+
+export type TopCollectionsByLinksType = {
+  linksCount: number;
+  id: string;
+  ownerId: string;
+  name: string;
+  description?: string;
+  visibility: "public" | "private" | "unlisted";
+  tags?: string[];
+  createdAt: string;
+  updatedAt?: string;
+  imageUrl?: string;
 };

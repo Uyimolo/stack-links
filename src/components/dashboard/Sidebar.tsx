@@ -7,6 +7,7 @@ import {
   Clock,
   LayoutDashboardIcon,
   LogOutIcon,
+  ChevronDown,
 } from "lucide-react";
 import { Logo, LogoSmall } from "../global/Logo";
 import UserCard from "./UserCard";
@@ -88,8 +89,10 @@ const Sidebar = () => {
       {/* side bar */}
       <div
         className={cn(
-          "border-grey-5 bg-grey-6 fixed top-0 left-0 z-10 min-h-screen w-[300px] -translate-x-[100%] space-y-4 overflow-hidden transition-all duration-300 md:sticky md:top-0 md:h-screen md:w-[250px] md:translate-x-0 md:border-r",
-          showSidebar ? "translate-x-0" : "-translate-x-[100%] md:w-[80px]",
+          "border-grey-7 bg-white fixed top-0 left-0 z-10 min-h-screen w-[300px] -translate-x-[100%] space-y-4 overflow-hidden transition-all duration-300 md:sticky md:top-0 md:h-screen md:w-[250px] xl:w-[350px] md:translate-x-0 md:border-r",
+          showSidebar
+            ? "translate-x-0"
+            : "-translate-x-[100%] md:w-[80px] xl:w-[80px]",
         )}
       >
         <div
@@ -117,32 +120,68 @@ const Sidebar = () => {
             {dashboardLinks.map((link, index) => (
               <li className="" key={index} onClick={handleToggleSidebar}>
                 {!link.path ? (
-                  <div className="">
+                  <div>
                     <button
                       className="group flex h-12 hover:bg-grey-4 hover:border-primary/50 items-center gap-2 border-r-4 border-transparent w-full px-4 text-sm transition duration-300 ease-in-out"
                       onClick={link.onClick}
                     >
-                      <link.icon className="text-text-secondary h-5 w-5" />
+                      <link.icon
+                        className={cn(
+                          "text-text-secondary h-5 w-5",
+                          showSidebar ? "mx-0" : "md:mx-auto",
+                        )}
+                      />
                       <span className={cn(showSidebar ? "" : "hidden")}>
                         {" "}
                         {link.label}
                       </span>
                     </button>
                   </div>
-                ) : (
-                  <Link
-                    href={link.path}
+                ) : link.label === "My Collections" ? (
+                  <div
                     className={cn(
-                      "group flex h-12 items-center gap-2 border-r-4 border-transparent px-4 text-sm transition duration-300 ease-in-out",
+                      "group flex h-12 items-center  gap-2 border-r-4 border-transparent  px-4 text-sm transition duration-300 ease-in-out",
                       isActive(link.path)
                         ? "bg-blue-2 border-primary"
                         : "hover:bg-grey-4 hover:border-primary/50",
                     )}
                   >
-                    <link.icon className="text-text-secondary h-5 w-5" />
+                    <Link
+                      className="flex w-full items-center gap-2"
+                      href={link.path}
+                    >
+                      <link.icon
+                        className={cn(
+                          "text-text-secondary h-5 w-5",
+                          showSidebar ? "mx-0" : "md:mx-auto",
+                        )}
+                      />
+
+                      <span className={cn(showSidebar ? "" : "hidden")}>
+                        {link.label}
+                      </span>
+                    </Link>
+
+                    <ChevronDown />
+                  </div>
+                ) : (
+                  <Link
+                    href={link.path}
+                    className={cn(
+                      "group flex h-12 items-center  gap-2 border-r-4 border-transparent  px-4 text-sm transition duration-300 ease-in-out",
+                      isActive(link.path)
+                        ? "bg-blue-2 border-primary"
+                        : "hover:bg-grey-4 hover:border-primary/50",
+                    )}
+                  >
+                    <link.icon
+                      className={cn(
+                        "text-text-secondary h-5 w-5",
+                        showSidebar ? "mx-0" : "md:mx-auto",
+                      )}
+                    />
 
                     <span className={cn(showSidebar ? "" : "hidden")}>
-                      {" "}
                       {link.label}
                     </span>
                   </Link>

@@ -12,11 +12,8 @@ const Collections = () => {
   const { collections } = useCollections(auth.currentUser?.uid || "");
   const { updateModal, showSidebar } = useAppState();
 
-  // useEffect(() => {
-  //   console.log(collections)
-  // }, [collections])
   return (
-    <div className="min-h-[83vh] bg-white p-4">
+    <div className="min-h-[83vh] p-4">
       {/* collections header */}
       <CollectionsHeader />
 

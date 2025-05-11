@@ -7,17 +7,20 @@ import { ImageUploadSVG } from "./SVGS";
 import { useDropzone } from "react-dropzone";
 
 interface InputProps<T extends FieldValues> {
-  className?: string; // Optional className for custom styling
-  name: Path<T>; // Ensures name matches form fields
+  className?: string;
+  name: Path<T>;
   label?: string;
   type?: string;
   placeholder?: string;
   register: UseFormRegister<T>;
   error?: string;
-  rows?: number; // Optional rows for textarea
-  resize?: boolean; // Optional prop to control textarea resizing
-  autoFocus?: boolean; // Optional prop to control autofocus
-  onBlur?: () => void; // Optional onBlur event handler
+  rows?: number;
+  resize?: boolean;
+  autoFocus?: boolean;
+  onBlur?: () => void;
+  onChange?: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => void;
 }
 
 export const Input = <T extends FieldValues>({
@@ -28,16 +31,19 @@ export const Input = <T extends FieldValues>({
   placeholder,
   register,
   error,
-  rows = 3, // Default rows for textarea
-  resize = false, // Default to false for textarea resizing
-  autoFocus = false, // Default to false for autofocus
+  rows = 3,
+  resize = false,
+  autoFocus = false,
   onBlur,
+  onChange,
 }: InputProps<T>) => {
-  const [showPassWord, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
-    setShowPassword(!showPassWord);
+    setShowPassword((prev) => !prev);
   };
+
+  const registerProps = register(name);
 
   return (
     <div className="flex w-full flex-col gap-1">
@@ -47,26 +53,32 @@ export const Input = <T extends FieldValues>({
         </label>
       )}
 
-      {/* Password Input */}
       {name === "password" || name === "confirmPassword" ? (
         <div className="relative">
           <input
-            {...register(name)}
-            type={showPassWord ? "text" : type}
+            {...registerProps}
+            type={showPassword ? "text" : type}
             id={name}
             placeholder={placeholder}
+            autoFocus={autoFocus}
+            onBlur={(e) => {
+              registerProps.onBlur(e);
+              onBlur?.();
+            }}
+            onChange={(e) => {
+              registerProps.onChange(e);
+              onChange?.(e);
+            }}
             className={cn(
               "border-grey-3 text-text-secondary w-full rounded-lg border px-3 py-3 text-sm",
               className,
             )}
-            autoFocus={autoFocus}
-            onBlur={onBlur}
           />
           <div
             className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer"
             onClick={togglePasswordVisibility}
           >
-            {showPassWord ? (
+            {showPassword ? (
               <EyeOff className="w-5" />
             ) : (
               <Eye className="w-5" />
@@ -74,36 +86,45 @@ export const Input = <T extends FieldValues>({
           </div>
         </div>
       ) : type === "textarea" ? (
-        // Textarea Input
         <textarea
-          {...register(name)}
+          {...registerProps}
           id={name}
           placeholder={placeholder}
           rows={rows}
-          // className="border-border-light text-text-secondary w-full rounded-lg border px-3 py-3 text-sm"
-          //   style={resize ? { resize: "both" } : { resize: "none" }}
+          autoFocus={autoFocus}
+          onBlur={(e) => {
+            registerProps.onBlur(e);
+            onBlur?.();
+          }}
+          onChange={(e) => {
+            registerProps.onChange(e);
+            onChange?.(e);
+          }}
           className={cn(
             "border-grey-3 text-text-secondary w-full rounded-lg border px-3 py-3 text-sm",
             className,
             resize ? "resize-y" : "resize-none",
           )}
-          autoFocus={autoFocus}
-          onBlur={onBlur}
         />
       ) : (
-        // Default Input
         <input
-          {...register(name)}
+          {...registerProps}
           type={type}
           id={name}
           placeholder={placeholder}
-          // className="border-border-light text-text-secondary w-full rounded-lg border px-3 py-3 text-sm"
+          autoFocus={autoFocus}
+          onBlur={(e) => {
+            registerProps.onBlur(e);
+            onBlur?.();
+          }}
+          onChange={(e) => {
+            registerProps.onChange(e);
+            onChange?.(e);
+          }}
           className={cn(
             "border-grey-3 text-text-secondary w-full rounded-lg border px-3 py-3 text-sm",
             className,
           )}
-          autoFocus={autoFocus}
-          onBlur={onBlur}
         />
       )}
 
@@ -189,7 +210,7 @@ export const FileInput = ({
           <></>
         )}
         <p
-          className={`pointer-events-none p-1 text-center text-sm  text-white mx-auto rounded`}
+          className={`pointer-events-none p-1 text-center bg-white/60 text-sm rounded mx-2`}
         >
           {isDragActive
             ? "Drop the file..."

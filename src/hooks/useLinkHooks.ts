@@ -47,8 +47,9 @@ export const useAllLinks = (userId: string) => {
 
 // For actions only (used in modals or isolated ops)
 export const useLinkActions = () => {
-  const { addLink, editLink, removeLink, loading, error } = useLinkStore();
-  return { addLink, editLink, removeLink, loading, error };
+  const { addLink, editLink, removeLink, loading, error, orderLinks } =
+    useLinkStore();
+  return { addLink, editLink, removeLink, loading, error, orderLinks };
 };
 
 export const useToggleLinkVisibility = (link: LinkType) => {

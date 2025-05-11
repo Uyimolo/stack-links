@@ -68,7 +68,7 @@ const LinkTags = ({ link }: { link: LinkType }) => {
           key={index}
           className="bg-grey-4 group relative rounded-lg px-2 py-1"
         >
-          <Paragraph className="text-xs">{tag}</Paragraph>
+          <Paragraph className="text-xs capitalize">{tag}</Paragraph>
           <div
             onClick={() => removeTag(tag)}
             className="hover:bg-red bg-primary absolute -top-1.5 -right-1 grid aspect-square h-4 w-4 cursor-pointer place-content-center rounded-full"
