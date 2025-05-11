@@ -11,13 +11,16 @@ import { auth } from "@/config/firebase";
 import { useLinkActions } from "@/hooks/useLinkHooks";
 import { toast } from "sonner";
 import { useCloudinaryUpload } from "@/hooks/useCloudinary";
+import { useState } from "react";
+import { Paragraph } from "../global/Text";
 
 const schema = z.object({
   url: z.string().url("Please enter a valid URL"),
   title: z.string().min(2, "Title must be at least 2 characters"),
   description: z
     .string()
-    .max(100, "Description should be lesser than 101 character(s)")
+    .min(2, "Description must be at least 2 characters")
+    .max(500, "Description must be at most 500 characters")
     .optional(),
   tags: z.string().optional(),
   image: z
@@ -42,15 +45,77 @@ const AddLinkModal = ({ collectionId }: Props) => {
   const { updateModal } = useAppState();
   const { addLink, loading } = useLinkActions();
 
+  const [showMetaDataInputs, setShowMetaDataInputs] = useState(false);
+  const [autoFill, setAutoFill] = useState(true);
+  const [metadataLoading, setMetadataLoading] = useState(false);
+  const [manualEdit, setManualEdit] = useState(false);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
     control,
+    watch,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     mode: "onChange",
   });
+
+  const validateURL = (url: string) => {
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const handleAutoFillMetadata = async () => {
+    const url = watch("url");
+
+    if (!url) {
+      toast.error("Please enter a URL first");
+      return;
+    }
+
+    if (!validateURL(url)) {
+      toast.error("Invalid URL format");
+      return;
+    }
+
+    if (!autoFill || manualEdit) {
+      return;
+    }
+
+    try {
+      setMetadataLoading(true);
+
+      const response = await fetch("/api/generate-metadata", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch metadata");
+      }
+
+      const { title, description } = await response.json();
+
+      setValue("title", title || "");
+      setValue("description", description || "");
+      setShowMetaDataInputs(true);
+      setAutoFill(false);
+    } catch (error) {
+      console.error(error);
+      toast.error("Metadata scraping failed. Please enter manually.");
+      setShowMetaDataInputs(true);
+      setAutoFill(false);
+    } finally {
+      setMetadataLoading(false);
+    }
+  };
 
   const onSubmit = async (data: FormData) => {
     const formattedTags = data.tags
@@ -70,13 +135,12 @@ const AddLinkModal = ({ collectionId }: Props) => {
       }
 
       imageUrl = result;
-      console.log(imageUrl);
     }
 
     const params = {
       linkId,
       collectionId,
-      userId: auth.currentUser?.uid || "",
+      userId,
       url: data.url,
       title: data.title,
       description: data.description || "",
@@ -116,24 +180,58 @@ const AddLinkModal = ({ collectionId }: Props) => {
           name="url"
           placeholder="https://example.com"
           error={errors.url?.message}
+          onBlur={handleAutoFillMetadata}
         />
 
-        <Input
-          register={register}
-          label="Title"
-          name="title"
-          placeholder="Link title"
-          error={errors.title?.message}
-        />
+        {showMetaDataInputs ? (
+          <div className="space-y-4">
+            <Input
+              register={register}
+              label="Title"
+              name="title"
+              placeholder="Link title"
+              error={errors.title?.message}
+              onChange={() => setManualEdit(true)}
+            />
 
-        <Input
-          type="textarea"
-          register={register}
-          name="description"
-          placeholder="Optional description"
-          error={errors.description?.message}
-          label="Description"
-        />
+            <Input
+              type="textarea"
+              register={register}
+              name="description"
+              placeholder="Optional description"
+              error={errors.description?.message}
+              label="Description"
+              onChange={() => setManualEdit(true)}
+            />
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {metadataLoading ? (
+              <Paragraph className="text-center text-gray-500">
+                Fetching metadata...
+              </Paragraph>
+            ) : (
+              <>
+                <Paragraph>
+                  Metadata (Title and Description) will be auto generated from
+                  URL
+                </Paragraph>
+
+                <Button
+                  type="button"
+                  variant="secondary"
+                  className="w-full"
+                  onClick={() => {
+                    setShowMetaDataInputs(true);
+                    setAutoFill(false);
+                  }}
+                >
+                  Cancel auto metadata generation
+                </Button>
+              </>
+            )}
+          </div>
+        )}
 
         <Input
           label="Tags"
@@ -153,17 +251,17 @@ const AddLinkModal = ({ collectionId }: Props) => {
               onChange={field.onChange}
               error={fieldState.error?.message}
               loading={uploading}
-              // imageUrl={""}
             />
           )}
         />
 
         <Button
           type="submit"
-          loading={loading}
+          loading={loading || metadataLoading}
+          disabled={metadataLoading}
           className="bg-primary w-full text-white"
         >
-          Add Link
+          {metadataLoading ? "Scraping metadata..." : "Add Link"}
         </Button>
       </form>
     </div>

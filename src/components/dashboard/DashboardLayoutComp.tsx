@@ -18,7 +18,7 @@ const DashboardLayoutComp = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="relative mx-auto md:flex h-full min-h-screen w-full max-w-[1700px]">
       <Sidebar />
-      <div className={cn("w-full")}>
+      <div className={cn("w-full pb-20 min-h-screen")}>
         <Header />
         {children}
         {/* <Loading /> */}

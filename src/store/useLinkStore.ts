@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import { CollectionType, LinkType } from "@/types/types";
+import { useAllLinkStore } from "@/store/useAllLinksStore";
+
 import {
   getCollections,
   getCollectionById,
@@ -12,6 +14,7 @@ import {
   deleteLink,
   searchCollections,
   searchLinks,
+  reorderLinks,
 } from "@/services/linkServices";
 
 interface LinkStoreState {
@@ -68,7 +71,7 @@ interface LinkStoreState {
     tags?: string[];
   }) => Promise<void>;
   removeLink: (linkId: string) => Promise<void>;
-
+  orderLinks: (newOrder: LinkType[]) => Promise<void>;
   searchForCollections: (params: {
     userId: string;
     searchTerm: string;
@@ -241,7 +244,7 @@ export const useLinkStore = create<LinkStoreState>((set) => ({
   }) => {
     set({ loading: true, error: null });
     try {
-      await createLink({
+      const newLink = {
         linkId,
         userId,
         collectionId,
@@ -252,8 +255,25 @@ export const useLinkStore = create<LinkStoreState>((set) => ({
         visibility,
         tags,
         pinned,
+      };
+      await createLink(newLink);
+      await useLinkStore.getState().fetchLinks({ userId, collectionId });
+      // ✅ Add to allLinks store
+      const id = newLink.linkId;
+      const { addLink } = useAllLinkStore.getState();
+      addLink({
+        id,
+        collectionId,
+        title,
+        url,
+        description,
+        imageUrl,
+        visibility,
+        tags,
+        pinned,
+        ownerId: userId, // Add ownerId from userId
+        createdAt: new Date().toISOString(), // Add createdAt with current timestamp
       });
-      await useLinkStore.getState().fetchLinks({ userId, collectionId }); // Refresh list
     } catch (error) {
       set({
         error: error instanceof Error ? error.message : "Failed to create link",
@@ -302,6 +322,23 @@ export const useLinkStore = create<LinkStoreState>((set) => ({
             : link,
         ),
       }));
+
+      // ✅ Update in allLinks store
+      const { allLinks, updateLink: updateAllLink } =
+        useAllLinkStore.getState();
+      const linkToUpdate = allLinks.find((link) => link.id === linkId);
+      if (linkToUpdate) {
+        updateAllLink({
+          ...linkToUpdate,
+          title: title ?? linkToUpdate.title,
+          url: url ?? linkToUpdate.url,
+          description: description ?? linkToUpdate.description,
+          imageUrl: imageUrl ?? linkToUpdate.imageUrl,
+          visibility: visibility ?? linkToUpdate.visibility,
+          pinned: pinned ?? linkToUpdate.pinned,
+          tags: tags ?? linkToUpdate.tags,
+        });
+      }
     } catch (error) {
       set({
         error: error instanceof Error ? error.message : "Failed to update link",
@@ -318,9 +355,30 @@ export const useLinkStore = create<LinkStoreState>((set) => ({
       set((state) => ({
         links: (state.links ?? []).filter((link) => link.id !== linkId),
       }));
+      // ✅ Remove from allLinks store
+      const { allLinks, removeLink: removeAllLink } =
+        useAllLinkStore.getState();
+      const linkToRemove = allLinks.find((link) => link.id === linkId);
+      if (linkToRemove) {
+        removeAllLink(linkToRemove);
+      }
     } catch (error) {
       set({
         error: error instanceof Error ? error.message : "Failed to delete link",
+      });
+    } finally {
+      set({ loading: false });
+    }
+  },
+  orderLinks: async (newOrder) => {
+    set({ loading: true, error: null });
+    try {
+      await reorderLinks(newOrder);
+      set({ links: newOrder });
+    } catch (error) {
+      set({
+        error:
+          error instanceof Error ? error.message : "Failed to reorder links",
       });
     } finally {
       set({ loading: false });

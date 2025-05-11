@@ -66,7 +66,7 @@ const LinkCard = ({ link }: { link: LinkType }) => {
   const values = watch();
 
   return (
-    <div className="hover:bg-grey-6 border-grey-3/40 overflow-hidden rounded-xl border bg-white shadow transition duration-300">
+    <div className="hover:bg-grey-6/30 border-grey-7 bg-white overflow-hidden rounded-xl border shadow transition duration-300">
       <div className="group flex w-full items-center gap-3 p-2 transition duration-300">
         {/* header */}
 

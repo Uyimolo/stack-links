@@ -64,7 +64,7 @@ const Collection = ({ collectionId }: { collectionId: string }) => {
 
   return (
     <div
-      className="min-h-screen bg-no-repeat bg-cover bg-center"
+      className="min-h-screen bg-no-repeat bg-cover bg-fixed bg-black/70 bg- bg-blend-multiply bg-center"
       style={{
         backgroundImage:
           "url(/assets/svgs/massimiliano-morosinotto-Tw_VQuS3Xio-unsplash.webp)",
@@ -99,7 +99,7 @@ const Collection = ({ collectionId }: { collectionId: string }) => {
       </div>
 
       {/* Links */}
-      <div className="flex flex-col items-center justify-center w-full max-w-sm mx-auto gap-4 p-4">
+      <div className="flex flex-col items-center justify-center w-full max-w-sm lg:max-w-xl mx-auto gap-4 p-4">
         {links === undefined && <Loading className="h-40" />}
 
         {links

@@ -11,6 +11,10 @@ import {
   deleteDoc,
   Timestamp,
   setDoc,
+  orderBy,
+  limit,
+  writeBatch,
+  FirestoreError,
 } from "firebase/firestore";
 
 // ==============================
@@ -157,6 +161,7 @@ export const getAllLinks = async (userId: string): Promise<LinkType[]> => {
 /**
  * Fetch all links within a collection
  */
+
 export const getLinksInCollection = async ({
   userId,
   collectionId,
@@ -164,19 +169,26 @@ export const getLinksInCollection = async ({
   userId: string;
   collectionId: string;
 }): Promise<LinkType[]> => {
-  const linksRef = collection(db, "allLinks");
-  const q = query(
-    linksRef,
-    where("ownerId", "==", userId),
-    where("collectionId", "==", collectionId),
-  );
-  const querySnapshot = await getDocs(q);
+  try {
+    const linksRef = collection(db, "allLinks");
+    const q = query(
+      linksRef,
+      where("ownerId", "==", userId),
+      where("collectionId", "==", collectionId),
+      orderBy("order", "asc"),
+    );
 
-  return querySnapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-    createdAt: doc.data().createdAt.toDate().toISOString(),
-  })) as LinkType[];
+    const querySnapshot = await getDocs(q);
+
+    return querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+      createdAt: doc.data().createdAt.toDate().toISOString(),
+    })) as LinkType[];
+  } catch (error) {
+    console.error("Firestore query error:", error);
+    throw error;
+  }
 };
 
 /*
@@ -185,7 +197,11 @@ export const getLinksInCollection = async ({
 
 export const getLinks = async (collectionId: string): Promise<LinkType[]> => {
   const linksRef = collection(db, "allLinks");
-  const q = query(linksRef, where("collectionId", "==", collectionId));
+  const q = query(
+    linksRef,
+    where("collectionId", "==", collectionId),
+    orderBy("order"),
+  );
   const querySnapshot = await getDocs(q);
 
   return querySnapshot.docs.map((doc) => ({
@@ -210,77 +226,42 @@ export const getLinkById = async (linkId: string): Promise<LinkType | null> => {
   } as LinkType;
 };
 
-/**
- * Create a new link inside a collection
- */
-// export const createLink = async ({
-//   userId,
-//   collectionId,
-//   title,
-//   url,
-//   description = "",
-//   imageUrl = "",
-//   visibility = "public",
-//   tags = [],
-//   pinned = false,
-// }: {
-//   userId: string
-//   collectionId: string
-//   title: string
-//   url: string
-//   description?: string
-//   imageUrl?: string
-//   visibility?: "public" | "private" | "unlisted"
-//   tags?: string[]
-//   pinned?: boolean
-// }) => {
-//   // Input validation
-//   if (!userId || !collectionId || !title || !url) {
-//     throw new Error("Required fields are missing or invalid.")
-//   }
+export const getNextLinkOrder = async (
+  collectionId: string,
+): Promise<number> => {
+  try {
+    const linksRef = collection(db, "allLinks");
+    const q = query(
+      linksRef,
+      where("collectionId", "==", collectionId),
+      orderBy("order", "desc"),
+      limit(1),
+    );
 
-//   // Fetch the collection to check its visibility
-//   const collectionRef = doc(db, "allCollections", collectionId)
-//   const collectionDoc = await getDoc(collectionRef)
+    const snapshot = await getDocs(q);
 
-//   if (!collectionDoc.exists()) {
-//     console.error("Error: Collection not found or not accessible")
-//     throw new Error("Collection does not exist")
-//   }
+    if (!snapshot.empty) {
+      const last = snapshot.docs[0];
+      const lastOrder = last.data().order;
+      console.log(lastOrder);
+      return typeof lastOrder === "number" ? lastOrder + 1 : 0;
+    }
 
-//   const collectionData = collectionDoc.data()
+    return 0;
+  } catch (err) {
+    if ((err as FirestoreError).code === "permission-denied") {
+      console.warn(
+        "Permission denied while reading latest link order:",
+        (err as FirestoreError).message,
+      );
+    } else {
+      console.error("Failed to fetch link order:", err);
+    }
 
-//   // If collection is private, check if the user is the owner
-//   if (
-//     collectionData?.visibility === "private" &&
-//     collectionData?.ownerId !== userId
-//   ) {
-//     throw new Error(
-//       "You cannot add a link to a private collection you do not own"
-//     )
-//   }
-
-//   // Proceed to create the link
-//   const linksRef = collection(db, "allLinks")
-//   try {
-//     const newDoc = await addDoc(linksRef, {
-//       ownerId: userId,
-//       collectionId,
-//       title,
-//       url,
-//       description,
-//       imageUrl,
-//       visibility,
-//       tags,
-//       pinned,
-//       createdAt: Timestamp.now(),
-//     })
-//     return newDoc.id
-//   } catch (error) {
-//     console.error("Error creating link:", error)
-//     throw new Error("Failed to create link")
-//   }
-// }
+    // Fallback if no access or unexpected error
+    return 0;
+  }
+};
 
 export const createLink = async ({
   userId,
@@ -336,7 +317,10 @@ export const createLink = async ({
     throw new Error("A link with this ID already exists");
   }
 
-  await setDoc(linkRef, {
+  const newOrder = await getNextLinkOrder(collectionId);
+  console.log(newOrder);
+
+  const newLink = {
     id: linkId,
     ownerId: userId,
     collectionId,
@@ -348,7 +332,12 @@ export const createLink = async ({
     tags,
     pinned,
     createdAt,
-  });
+    order: newOrder,
+  };
+
+  await setDoc(linkRef, newLink);
+
+  console.log(newLink);
 
   return linkRef;
 };
@@ -395,6 +384,19 @@ export const updateLink = async ({
 export const deleteLink = async (linkId: string) => {
   const docRef = doc(db, "allLinks", linkId);
   await deleteDoc(docRef);
+};
+
+/**
+ * Reorder links
+ */
+export const reorderLinks = async (newOrder: LinkType[]) => {
+  const batch = writeBatch(db);
+  newOrder.forEach((link, index) => {
+    const ref = doc(db, "allLinks", link.id);
+    batch.update(ref, { order: index });
+  });
+
+  await batch.commit();
 };
 
 // ==============================

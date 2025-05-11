@@ -37,7 +37,7 @@ const LinkCardExtension = ({ link }: { link: LinkType }) => {
   }, [extendedComponentVariant, closeLinkCardExtension]);
 
   const Header = () => (
-    <div className="bg-grey-4 relative p-2">
+    <div className="bg-grey- border-t border-b border-grey-7 relative p-2">
       <Paragraph className="text-text-primary text-center font-semibold capitalize">
         {extendedComponentVariant}
       </Paragraph>

@@ -8,7 +8,7 @@ const LinkActions = ({ link }: { link: LinkType }) => {
   const { updateLinkCardExtension } = useAppState();
 
   return (
-    <div className="flex flex-wrap justify-between gap-6 borde rounded-xl">
+    <div className="flex flex-wrap justify-between bg-grey-  px-2 gap-6 border rounded-xl">
       <div className="flex items-center gap-6">
         <TooltipComponent
           content="Tags"

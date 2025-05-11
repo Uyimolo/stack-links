@@ -5,7 +5,9 @@ export const Logo = () => {
   return (
     <div className="flex gap-1">
       <SquareStackIcon className="text-primary" />
-      <p className="text-secondary font-inter text-2xl font-bold">Stacklinks</p>
+      <p className="text-secondary font-inter text-xl xl:text-2xl font-bold">
+        Stacklinks
+      </p>
     </div>
   );
 };
