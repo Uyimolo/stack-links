@@ -40,8 +40,10 @@ const CollectionMockup = ({ collectionId }: { collectionId: string }) => {
                 className="flex items-center gap-1 overflow-hidden rounded-full bg-white p-1"
               >
                 <div
-                  className="bg-grey-3 aspect-square w-12 rounded-full border bg-cover"
-                  style={{ backgroundImage: `url(${link.imageUrl})` }}
+                  className="bg-grey- aspect-square w-12 rounded-full borde bg-cover"
+                  style={{
+                    backgroundImage: `url(${link.imageUrl || link.favicon})`,
+                  }}
                 ></div>
 
                 <Paragraph className="w-full text-center text-[11px] line-clamp-1 capitalize">

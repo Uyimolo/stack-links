@@ -17,6 +17,7 @@ export type LinkType = {
   collectionId: string;
   ownerId: string;
   url: string;
+  favicon?: string;
   title: string;
   description?: string;
   imageUrl?: string;

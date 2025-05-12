@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useAppState } from "@/store/useAppStore";
 import { Button } from "../global/Button";
-import { X } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { FileInput, Input } from "@/components/global/Input";
 import { auth } from "@/config/firebase";
 import { useLinkActions } from "@/hooks/useLinkHooks";
@@ -14,9 +14,25 @@ import { useCloudinaryUpload } from "@/hooks/useCloudinary";
 import { useState } from "react";
 import { Paragraph } from "../global/Text";
 
+const validateURL = (url: string) => {
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
 const schema = z.object({
   url: z.string().url("Please enter a valid URL"),
   title: z.string().min(2, "Title must be at least 2 characters"),
+  favicon: z
+    .string()
+    .refine(
+      (val) => val === "" || validateURL(val),
+      "Please enter a valid URL for the favicon",
+    )
+    .optional(),
   description: z
     .string()
     .min(2, "Description must be at least 2 characters")
@@ -62,15 +78,6 @@ const AddLinkModal = ({ collectionId }: Props) => {
     mode: "onChange",
   });
 
-  const validateURL = (url: string) => {
-    try {
-      new URL(url);
-      return true;
-    } catch {
-      return false;
-    }
-  };
-
   const handleAutoFillMetadata = async () => {
     const url = watch("url");
 
@@ -101,10 +108,18 @@ const AddLinkModal = ({ collectionId }: Props) => {
         throw new Error("Failed to fetch metadata");
       }
 
-      const { title, description } = await response.json();
+      const {
+        title,
+        description,
+        favicon,
+        tags: fetchedTags,
+      } = await response.json();
+      console.log(fetchedTags);
 
       setValue("title", title || "");
       setValue("description", description || "");
+      setValue("favicon", validateURL(favicon) ? favicon : "");
+      setValue("tags", fetchedTags || "");
       setShowMetaDataInputs(true);
       setAutoFill(false);
     } catch (error) {
@@ -146,6 +161,7 @@ const AddLinkModal = ({ collectionId }: Props) => {
       description: data.description || "",
       tags: formattedTags,
       imageUrl,
+      favicon: data.favicon,
     };
 
     try {
@@ -203,30 +219,44 @@ const AddLinkModal = ({ collectionId }: Props) => {
               label="Description"
               onChange={() => setManualEdit(true)}
             />
+
+            <Input
+              name="favicon"
+              register={register}
+              placeholder="Optional favicon address"
+              error={errors.favicon?.message}
+              label="Favicon"
+              onChange={() => setManualEdit(true)}
+            />
           </div>
         ) : (
           <div className="space-y-4">
-            {metadataLoading ? (
-              <Paragraph className="text-center text-gray-500">
-                Fetching metadata...
+            {metadataLoading && (
+              <Paragraph className="text-center flex gap-2 justify-center text-gray-500">
+                Fetching metadata <Loader2 className="animate-spin" />
               </Paragraph>
-            ) : (
+            )}{" "}
+            {!metadataLoading && (
               <>
-                <Paragraph>
-                  Metadata (Title and Description) will be auto generated from
-                  URL
-                </Paragraph>
+                <Button
+                  type="button"
+                  variant="primary"
+                  className="w-full text-sm"
+                  onClick={handleAutoFillMetadata}
+                >
+                  Autofill Link Metadata
+                </Button>
 
                 <Button
                   type="button"
                   variant="secondary"
-                  className="w-full"
+                  className="w-full text-sm"
                   onClick={() => {
                     setShowMetaDataInputs(true);
                     setAutoFill(false);
                   }}
                 >
-                  Cancel auto metadata generation
+                  Set metadata manually
                 </Button>
               </>
             )}

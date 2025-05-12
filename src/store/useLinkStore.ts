@@ -59,6 +59,7 @@ interface LinkStoreState {
     visibility?: "public" | "private" | "unlisted";
     tags?: string[];
     pinned?: boolean;
+    favicon?: string;
   }) => Promise<void>;
   editLink: (params: {
     linkId: string;
@@ -241,6 +242,7 @@ export const useLinkStore = create<LinkStoreState>((set) => ({
     visibility = "public",
     tags = [],
     pinned = false,
+    favicon,
   }) => {
     set({ loading: true, error: null });
     try {
@@ -255,6 +257,7 @@ export const useLinkStore = create<LinkStoreState>((set) => ({
         visibility,
         tags,
         pinned,
+        favicon,
       };
       await createLink(newLink);
       await useLinkStore.getState().fetchLinks({ userId, collectionId });

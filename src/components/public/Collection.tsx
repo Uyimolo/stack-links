@@ -10,7 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { MoreVertical } from "lucide-react";
+import { Link2Icon, MoreVertical, Smile } from "lucide-react";
 import { Button } from "@/components/global/Button";
 import Link from "next/link";
 import { Logo } from "../global/Logo";
@@ -41,10 +41,10 @@ const Collection = ({ collectionId }: { collectionId: string }) => {
     return (
       <div
         className="min-h-screen flex flex-col w-full bg-cover bg-center items-start"
-        style={{
-          backgroundImage:
-            "url(/assets/svgs/massimiliano-morosinotto-Tw_VQuS3Xio-unsplash.webp)",
-        }}
+        // style={{
+        //   backgroundImage:
+        //     "url(/assets/svgs/massimiliano-morosinotto-Tw_VQuS3Xio-unsplash.webp)",
+        // }}
       >
         <header className="flex justify-between w-full items-center p-4">
           <Link href="/">
@@ -64,11 +64,11 @@ const Collection = ({ collectionId }: { collectionId: string }) => {
 
   return (
     <div
-      className="min-h-screen bg-no-repeat bg-cover bg-fixed bg-black/70 bg- bg-blend-multiply bg-center"
-      style={{
-        backgroundImage:
-          "url(/assets/svgs/massimiliano-morosinotto-Tw_VQuS3Xio-unsplash.webp)",
-      }}
+      className="min-h-screen bg-no-repeat bg-cover bg-fixed bg- bg-blend-multiply bg-center"
+      // style={{
+      //   backgroundImage:
+      //     "url(/assets/svgs/massimiliano-morosinotto-Tw_VQuS3Xio-unsplash.webp)",
+      // }}
     >
       {/* Header */}
       <header className="flex justify-between items-center p-4">
@@ -88,11 +88,11 @@ const Collection = ({ collectionId }: { collectionId: string }) => {
             style={{ backgroundImage: `url(${collection.imageUrl})` }}
           />
         )}
-        <Paragraph className="text-center text-grey-6 text-xl capitalize font-bold">
+        <Paragraph className="text-center text-xl capitalize font-bold">
           {collection.name}
         </Paragraph>
         {collection.description && (
-          <Paragraph className="text-center text-grey-5 text-sm max-w-md">
+          <Paragraph className="text-center text-sm max-w-md">
             {collection.description}
           </Paragraph>
         )}
@@ -106,42 +106,53 @@ const Collection = ({ collectionId }: { collectionId: string }) => {
           ?.filter((link) => link.visibility !== "private")
           .map((link, index) => (
             <div
+              className="rounded-ful flex flex-col gap-2 w-full bg-white border border-grey-3 p-1 shadow-sm hover:shadow-md transition"
               key={index}
-              className="flex w-full items-center gap-2 overflow-hidden rounded-full bg-white p-1 shadow-sm hover:shadow-md transition"
             >
-              <div
-                className="bg-grey-3 aspect-square w-12 rounded-full bg-cover bg-center"
-                style={{
-                  backgroundImage: `url(${link.imageUrl || "/assets/svgs/default-link.svg"})`,
-                }}
-              />
+              <div className="flex w-full items-center gap-2 overflow-hidden ">
+                {link.imageUrl ? (
+                  <div
+                    className="bg-grey-3 aspect-square w-12 rounded-ful bg-cover bg-center"
+                    style={{
+                      backgroundImage: `url(${link.imageUrl || "/assets/svgs/default-link.svg"})`,
+                    }}
+                  />
+                ) : (
+                  <div className="grid place-content-center border rounded-full aspect-square w-12">
+                    <Link2Icon className="text-primary" />
+                  </div>
+                )}
 
-              <Paragraph className="flex-1 text-center line-clamp-1 capitalize text-sm">
-                {link.title}
-              </Paragraph>
+                <Paragraph className="flex-1 text-center line-clamp-1 capitalize text-sm">
+                  {link.title}
+                </Paragraph>
 
-              <DropdownMenu>
-                <DropdownMenuTrigger className="w-10">
-                  <MoreVertical className="text-grey-1 w-4" />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem>
-                    <Link
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Open Link
-                    </Link>
-                  </DropdownMenuItem>
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="w-10">
+                    <MoreVertical className="text-grey-1 w-4" />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem>
+                      <Link
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Open Link
+                      </Link>
+                    </DropdownMenuItem>
 
-                  <DropdownMenuItem>
-                    <button onClick={() => copyTextToClipboard(link.url)}>
-                      Copy Link
-                    </button>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                    <DropdownMenuItem>
+                      <button onClick={() => copyTextToClipboard(link.url)}>
+                        Copy Link
+                      </button>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+              <div className="">
+                <Smile />
+              </div>
             </div>
           ))}
       </div>

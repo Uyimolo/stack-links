@@ -15,8 +15,10 @@ const CollectionCard = ({ collection }: { collection: CollectionType }) => {
       <Link href={`/collections/${id}`} className="">
         {/* image */}
         <div
-          className="bg-white border aspect-square mb-2 bg-cover bg-cente h-40 w-full rounded-xl bg-cove bg-no-repeat p-2"
-          style={{ backgroundImage: `url(${imageUrl || collectionImage.src})` }}
+          className="bg-white border aspect-square mb-2  bg-cover bg-center h-40 w-full rounded-xl bg-cove bg-no-repeat p-2"
+          style={{
+            backgroundImage: `url(${imageUrl || collectionImage.src})`,
+          }}
         >
           <div className="ml-auto w-fit">
             <VisibilityBadge visibility={visibility} />

@@ -9,13 +9,29 @@ async function scrapeMetadata(url: string) {
     const title = $("title").first().text().trim();
     const description =
       $('meta[name="description"]').attr("content")?.trim() || "";
+    const favicon = $('link[rel="icon"]').attr("href")?.trim() || "";
+    const tags = extractKeywords($);
 
-    if (!title && !description) throw new Error("Empty metadata");
-    return { title, description };
+    if (!title && !description && !favicon && !tags)
+      throw new Error("Empty metadata");
+    return { title, description, favicon, tags };
   } catch (err) {
     console.error("Scraping failed:", (err as Error).message);
     return null;
   }
+}
+
+function extractKeywords($: cheerio.CheerioAPI): string {
+  const keywordsMeta = $('meta[name="keywords"]').attr("content") || "";
+  const keywordsOG = $('meta[property="article:tag"]')
+    .map((_, el) => $(el).attr("content"))
+    .get();
+
+  const keywordList = keywordsMeta
+    ? keywordsMeta.split(",").map((tag) => tag.trim())
+    : [];
+
+  return [...new Set([...keywordList, ...keywordsOG])].join(","); // dedupe
 }
 
 export async function POST(req: NextRequest) {

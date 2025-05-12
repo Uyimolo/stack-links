@@ -67,10 +67,16 @@ const LinkCard = ({ link }: { link: LinkType }) => {
 
   return (
     <div className="hover:bg-grey-6/30 border-grey-7 bg-white overflow-hidden rounded-xl border shadow transition duration-300">
-      <div className="group flex w-full items-center gap-3 p-2 transition duration-300">
+      <div className="group flex w-full  items-stretch gap-3 p-2 transition duration-300">
         {/* header */}
+        <div className="grid min-h-full">
+          <div
+            className="h-4 bg-cover aspect-square mt-2"
+            style={{ backgroundImage: `url(${link.favicon})` }}
+          ></div>
 
-        <GripVertical className="text-muted-foreground w-4 cursor-grab" />
+          <GripVertical className="text-muted-foreground mb-4 w-4 cursor-grab" />
+        </div>
 
         <div className="w-full space-y-3 pl-2 border-l">
           <div className="space-y-1">

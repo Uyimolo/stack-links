@@ -5,11 +5,11 @@ import { Button } from "../global/Button";
 import { Plus } from "lucide-react";
 import { H1, Paragraph } from "../global/Text";
 import collectionImage from "@/assets/svgs/Collection-pana.svg";
-import Image from "next/image";
 
 const CollectionHeader = ({
   name,
   collectionId,
+  imageUrl,
 }: {
   name: string;
   collectionId: string;
@@ -18,9 +18,9 @@ const CollectionHeader = ({
   const { updateModal } = useAppState();
 
   return (
-    <div className=" space-y-4 p-4">
-      <div className="relative flex w-full bg-primary lg:h-40 justify-between overflow-hidden rounded-xl p-4">
-        <div className="space-y-4">
+    <div className=" space-y-4 p-4 ">
+      <div className="relative flex w-full overflow-hidden bg-primary h-40  justify-between  rounded-xl">
+        <div className="space-y-4 p-4">
           <H1 className="font-semibold text-white capitalize md:font-bold">
             {name}
           </H1>
@@ -29,13 +29,14 @@ const CollectionHeader = ({
           </Paragraph>
         </div>
 
-        <Image
-          width={200}
-          height={200}
-          className="-top-4 max-w-[100px] lg:absolute lg:right-4 lg:max-w-none lg:min-w-xs"
-          src={collectionImage}
-          alt="lady arranging picture frames collection"
-        />
+        <div className="w-1/2 p-2">
+          <div
+            className=" h-full bg-contain bg-right w-full rounded-lg bg-no-repeat"
+            style={{
+              backgroundImage: `url(${imageUrl ? imageUrl : collectionImage.src})`,
+            }}
+          ></div>
+        </div>
       </div>
 
       <div className="flex w-full flex-row gap-1 lg:gap-4">
