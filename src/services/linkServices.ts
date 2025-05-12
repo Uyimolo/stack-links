@@ -274,6 +274,7 @@ export const createLink = async ({
   visibility = "public",
   tags = [],
   pinned = false,
+  favicon,
   createdAt = Timestamp.now(),
 }: {
   userId: string;
@@ -286,6 +287,7 @@ export const createLink = async ({
   visibility?: "public" | "private" | "unlisted";
   tags?: string[];
   pinned?: boolean;
+  favicon?: string;
   createdAt?: Timestamp;
 }) => {
   if (!userId || !collectionId || !linkId || !title || !url) {
@@ -332,6 +334,7 @@ export const createLink = async ({
     tags,
     pinned,
     createdAt,
+    favicon,
     order: newOrder,
   };
 
